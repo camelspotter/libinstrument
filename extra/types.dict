@@ -1,0 +1,13 @@
+bool
+char
+char16_t
+char32_t
+double
+float
+int
+long
+short
+signed
+unsigned
+void
+wchar_t
