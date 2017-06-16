@@ -58,6 +58,7 @@ extern "C" {
 
 	@todo Implement syscall wrappers for proper retval handling (replays)
 	@todo Restructure config.hpp
+	@todo Create (from scratch) cmake hooks in config.h and children
 */
 namespace csdbg {
 
