@@ -1,5 +1,5 @@
-#ifndef _CSDBG_CONFIG
-#define _CSDBG_CONFIG 1
+#ifndef _INSTRUMENT_CONFIG
+#define _INSTRUMENT_CONFIG 1
 
 /**
 	@file include/config.hpp
@@ -7,59 +7,19 @@
 	@brief Library configuration, type, macro and global variable definition
 */
 
-
-#include <iostream>
-#include <typeinfo>
-
-#include <climits>
-#include <cstdarg>
-#include <cstring>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <cxxabi.h>
-#include <bfd.h>
-#include <link.h>
-#include <pthread.h>
-#include <regex.h>
-#include <sys/stat.h>
-
-#ifdef CSDBG_WITH_HIGHLIGHT
-#include <fcntl.h>
-#include <sys/mman.h>
-#endif
-
-#ifdef CSDBG_WITH_STREAM
-#include <sys/file.h>
-#include <sys/time.h>
-
-#ifdef CSDBG_WITH_STREAM_STTY
-#include <termios.h>
-#endif
-
-#ifdef CSDBG_WITH_STREAM_TCP
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#endif
-#endif
-
-#ifdef __cplusplus
-}
-#endif
+#include "config/config_headers.hpp"
 
 
 /**
 	@brief Complete library namespace
 
-	This namespace consists of the libcsdbg classes/templates and global variables
-	(csdbg::g_*) that provide the default library configuration
+	This namespace consists of the libinstrument classes/templates and global variables
+	(instrument::g_*) that provide the default library configuration
 
 	@todo Implement syscall wrappers for proper retval handling (replays)
 	@todo Restructure config.hpp
 */
-namespace csdbg {
+namespace instrument {
 
 /**
 	@brief 8-bit signed integer
@@ -141,13 +101,13 @@ typedef unsigned int				mem_addr_t;
 /*
 	Syntax highlighter type definitions
 */
-#ifdef CSDBG_WITH_HIGHLIGHT
+#ifdef INSTRUMENT_WITH_HIGHLIGHT
 
 /**
 	@brief VT100 attribute bitmask
 
 	This type could be defined as a u8, it is defined as u16 to reserve space. The
-	sizeof(csdbg::style) remains 8 bytes due to 4 byte alignment
+	sizeof(instrument::style) remains 8 bytes due to 4 byte alignment
 */
 typedef u16									attrset_t;
 
@@ -167,7 +127,7 @@ typedef struct stat					fileinfo_t;
 /*
 	Plugin system type definitions
 */
-#ifdef CSDBG_WITH_PLUGIN
+#ifdef INSTRUMENT_WITH_PLUGIN
 
 /**
 	@brief DSO handle
@@ -185,7 +145,7 @@ typedef void (*							modsym_t)(void*, void*);
 /*
 	TCP streaming type definitions
 */
-#ifdef CSDBG_WITH_STREAM_TCP
+#ifdef INSTRUMENT_WITH_STREAM_TCP
 
 /**
 	@brief TCP IPv4 address
@@ -205,10 +165,10 @@ typedef struct sockaddr			ip_addr_t;
 /*
 	Static library globals
 */
-namespace csdbg {
+namespace instrument {
 
 /**
-	@brief Supported csdbg::string codepages
+	@brief Supported instrument::string codepages
 
 	@see string::m_locale
 */
@@ -225,7 +185,7 @@ static const codepage_t g_codepages[] = {
 
 	@see tracer::on_dso_load
 */
-static const i8 g_libs_env[] = "CSDBG_LIBS";
+static const i8 g_libs_env[] = "INSTRUMENT_LIBS";
 
 /**
 	@brief Library version major
@@ -257,19 +217,19 @@ static const u16 g_prealloc_sz = 128;
 static const i8 g_prefix[] = "/usr/local";
 
 
-#ifdef CSDBG_WITH_HIGHLIGHT
+#ifdef INSTRUMENT_WITH_HIGHLIGHT
 
 /**
 	@brief C++ stack trace syntax
 
-	@see csdbg::parser
+	@see instrument::parser
 */
 static const i8 g_trace_syntax[] = "[ \t\n\r\\{\\}\\(\\)\\*&,:<>]+";
 
 #endif
 
 
-#ifdef CSDBG_WITH_STREAM_TCP
+#ifdef INSTRUMENT_WITH_STREAM_TCP
 
 /**
 	@brief LDP service port
@@ -284,7 +244,7 @@ static const i32 g_ldp_port = 4242;
 /*
 	Library output message tags and macros
 */
-namespace csdbg {
+namespace instrument {
 
 /**
 	@brief Tag for error console messages
@@ -332,42 +292,42 @@ namespace csdbg {
 /*
 	Debug levels and assertions
 */
-#ifdef CSDBG_WITH_DEBUG
+#ifdef INSTRUMENT_WITH_DEBUG
 
 /**
 	@brief Error debug level
 */
-#define CSDBG_DBGL_ERROR		0x01
+#define INSTRUMENT_DBGL_ERROR		0x01
 
 /**
 	@brief Warning debug level
 */
-#define CSDBG_DBGL_WARNING	0x02
+#define INSTRUMENT_DBGL_WARNING	0x02
 
 /**
 	@brief Generic debug level
 */
-#define CSDBG_DBGL_INFO			0x04
+#define INSTRUMENT_DBGL_INFO			0x04
 
 /**
 	@brief Low debug level (only errors)
 */
-#define CSDBG_DBGL_LOW			(CSDBG_DBGL_ERROR)
+#define INSTRUMENT_DBGL_LOW			(INSTRUMENT_DBGL_ERROR)
 
 /**
 	@brief Medium debug level (errors and warnings)
 */
-#define CSDBG_DBGL_MEDIUM		(CSDBG_DBGL_LOW | CSDBG_DBGL_WARNING)
+#define INSTRUMENT_DBGL_MEDIUM		(INSTRUMENT_DBGL_LOW | INSTRUMENT_DBGL_WARNING)
 
 /**
 	@brief High debug level (all messages)
 */
-#define CSDBG_DBGL_HIGH			(CSDBG_DBGL_MEDIUM | CSDBG_DBGL_INFO)
+#define INSTRUMENT_DBGL_HIGH			(INSTRUMENT_DBGL_MEDIUM | INSTRUMENT_DBGL_INFO)
 
 /**
 	@brief Selected debug level
 */
-#define CSDBG_DBG_LEVEL			CSDBG_DBGL_HIGH
+#define INSTRUMENT_DBG_LEVEL			INSTRUMENT_DBGL_HIGH
 
 /**
 	@brief Assertion macro
@@ -392,7 +352,7 @@ if (!(x)) {																										\
 	Use of color in terminals (RXVT, XTerm e.t.c) to color-code message tags and
 	assertions
 */
-#ifdef CSDBG_WITH_COLOR_TERM
+#ifdef INSTRUMENT_WITH_COLOR_TERM
 
 /**
 	@brief Tag color for error and exception messages
@@ -417,7 +377,7 @@ if (!(x)) {																										\
 #endif
 
 
-#ifdef CSDBG_WITH_COLOR_ASSERTIONS
+#ifdef INSTRUMENT_WITH_COLOR_ASSERTIONS
 
 /**
 	@brief Color coded assertion macro
@@ -437,7 +397,7 @@ if (!(x)) {																										\
 /*
 	Syntax highlighter definitions
 */
-#ifdef CSDBG_WITH_HIGHLIGHT
+#ifdef INSTRUMENT_WITH_HIGHLIGHT
 
 /**
 	@brief Highlighter color for numbers (any base)

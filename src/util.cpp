@@ -1,4 +1,4 @@
-#include "../include/tracer.hpp"
+//#include "../include/tracer.hpp"
 #include "../include/util.hpp"
 
 /**
@@ -28,7 +28,7 @@ void util::on_lib_load()
 		return;
 	}
 	catch (std::exception &x) {
-		std::cerr << x;
+		//std::cerr << x;
 	}
 
 	exit(EXIT_FAILURE);
@@ -92,7 +92,7 @@ const i8* util::executable_path()
 	i8 path[PATH_MAX + 1];
 	i32 len = snprintf(path, PATH_MAX + 1, "/proc/%d/exe", getpid());
 	if ( unlikely(len < 0) ) {
-		throw exception("snprintf failed with retval %d", len);
+		//throw exception("snprintf failed with retval %d", len);
 	}
 
 	i8 *retval = new i8[PATH_MAX + 1];
@@ -102,11 +102,11 @@ const i8* util::executable_path()
 	if ( unlikely(len < 0) ) {
 		delete[] retval;
 
-		throw exception(
+		/*throw exception(
 			"failed to read symlink '%s' (errno %d - %s)",
 			path,
 			errno,
-			strerror(errno));
+			strerror(errno));*/
 	}
 
 	retval[len] = '\0';
@@ -166,7 +166,7 @@ void util::init(i32 &argc, i8 **argv)
 		for (i32 i = 0; likely(i < argc); i++) {
 			const i8 *arg = argv[i];
 
-			/* If the argument is not libcsdbg-related */
+			/* If the argument is not libinstrument-related */
 			if ( likely(strstr(arg, "--instrument-") != arg) ) {
 				continue;
 			}
@@ -196,11 +196,11 @@ void util::init(i32 &argc, i8 **argv)
 
 		return;
 	}
-	catch (exception &x) {
+	/*catch (exception &x) {
 		std::cerr << x;
-	}
+	}*/
 	catch (std::exception &x) {
-		std::cerr << x;
+		//std::cerr << x;
 	}
 
 	exit(EXIT_FAILURE);
@@ -290,7 +290,7 @@ void util::lock()
  *	<0, 0, >0 if the first sz bytes of b1 are respectively, less than, equal, or
  *	greater than the first sz bytes of b2
  *
- * @throws csdbg::exception
+ * @throws instrument::exception
  *
  * @note This method is used for portability (in place of BSD's bcmp)
  */
@@ -299,7 +299,7 @@ i32 util::memcmp(const void *b1, const void *b2, u32 sz)
 	__D_ASSERT(b1 != NULL);
 	__D_ASSERT(b2 != NULL);
 	if ( unlikely(b1 == NULL || b2 == NULL) ) {
-		throw exception("invalid argument: b1 (=%p) and/or b2 (=%p)", b1, b2);
+		//throw exception("invalid argument: b1 (=%p) and/or b2 (=%p)", b1, b2);
 	}
 
 	const u8 *p1 = static_cast<const u8*> (b1);
@@ -436,7 +436,7 @@ void util::unlock()
  * @param[in] inf the file info
  *
  * @returns true if it is a character device node, false otherwise
- */
+ /
 bool util::is_chardev(const fileinfo_t &inf)
 {
 	return S_ISCHR(inf.st_mode);
@@ -449,7 +449,7 @@ bool util::is_chardev(const fileinfo_t &inf)
  * @param[in] inf the file info
  *
  * @returns true if it is readable, false otherwise
- */
+ /
 bool util::is_readable(const fileinfo_t &inf)
 {
 	if ( likely(geteuid() == inf.st_uid && (inf.st_mode & S_IRUSR)) ) {
@@ -470,7 +470,7 @@ bool util::is_readable(const fileinfo_t &inf)
  * @param[in] inf the file info
  *
  * @returns true if it is regular, false otherwise
- */
+ /
 bool util::is_regular(const fileinfo_t &inf)
 {
 	return S_ISREG(inf.st_mode);
@@ -483,7 +483,7 @@ bool util::is_regular(const fileinfo_t &inf)
  * @param[in] inf the file info
  *
  * @returns true if it is writable, false otherwise
- */
+ /
 bool util::is_writable(const fileinfo_t &inf)
 {
 	if ( likely(geteuid() == inf.st_uid && (inf.st_mode & S_IWUSR)) ) {
@@ -511,7 +511,7 @@ bool util::is_writable(const fileinfo_t &inf)
  */
 void util::dbg(console_tag_t tag, const i8 *fmt, va_list args)
 {
-#ifdef CSDBG_WITH_DEBUG
+#ifdef INSTRUMENT_WITH_DEBUG
 	__D_ASSERT(tag != NULL);
 	__D_ASSERT(fmt != NULL);
 	if ( unlikely(tag == NULL || fmt == NULL) ) {
@@ -550,7 +550,7 @@ void util::dbg(console_tag_t tag, const i8 *fmt, va_list args)
  */
 void util::dbg_error(const i8 *fmt, ...)
 {
-#if CSDBG_DBG_LEVEL & CSDBG_DBGL_ERROR
+#if INSTRUMENT_DBG_LEVEL & INSTRUMENT_DBGL_ERROR
 	__D_ASSERT(fmt != NULL);
 	if ( unlikely(fmt == NULL) ) {
 		return;
@@ -574,7 +574,7 @@ void util::dbg_error(const i8 *fmt, ...)
  */
 void util::dbg_info(const i8 *fmt, ...)
 {
-#if CSDBG_DBG_LEVEL & CSDBG_DBGL_INFO
+#if INSTRUMENT_DBG_LEVEL & INSTRUMENT_DBGL_INFO
 	__D_ASSERT(fmt != NULL);
 	if ( unlikely(fmt == NULL) ) {
 		return;
@@ -598,7 +598,7 @@ void util::dbg_info(const i8 *fmt, ...)
  */
 void util::dbg_warn(const i8 *fmt, ...)
 {
-#if CSDBG_DBG_LEVEL & CSDBG_DBGL_WARNING
+#if INSTRUMENT_DBG_LEVEL & INSTRUMENT_DBGL_WARNING
 	__D_ASSERT(fmt != NULL);
 	if ( unlikely(fmt == NULL) ) {
 		return;
@@ -625,7 +625,7 @@ void util::header(std::ostream &stream, console_tag_t tag)
 		return;
 	}
 
-#ifdef CSDBG_WITH_COLOR_TERM
+#ifdef INSTRUMENT_WITH_COLOR_TERM
 	u32 fg = EXCEPTION_TAG_FG;
 	if ( likely(is_error(tag)) ) {
 		fg = ERROR_TAG_FG;
@@ -655,13 +655,13 @@ void util::header(std::ostream &stream, console_tag_t tag)
 				 << pthread_self();
 
 	const i8 *name = NULL;
-	const tracer *iface = tracer::interface();
+	/*const tracer *iface = tracer::interface();
 	if ( likely(iface != NULL) ) {
 		name =
 			iface->proc()
 					 ->current_thread()
 					 ->name();
-	}
+	}*/
 
 	stream << " ("
 				 << ((likely(name != NULL)) ? name : "anonymous")
@@ -681,13 +681,13 @@ void util::header(std::ostream &stream, console_tag_t tag)
  * @returns the formatted string (heap allocated)
  *
  * @throws std::bad_alloc
- * @throws csdbg::exception
+ * @throws instrument::exception
  */
 i8* util::va_format(const i8 *fmt, va_list args)
 {
 	if ( unlikely(fmt == NULL) ) {
 		va_end(args);
-		throw exception("invalid argument: fmt (=%p)", fmt);
+		//throw exception("invalid argument: fmt (=%p)", fmt);
 	}
 
 	va_list cpargs;
@@ -700,7 +700,7 @@ i8* util::va_format(const i8 *fmt, va_list args)
 
 		i32 check = vsprintf(retval, fmt, args);
 		if ( unlikely(check != sz) ) {
-			throw exception("vsprintf failed with retval %d", check);
+			//throw exception("vsprintf failed with retval %d", check);
 		}
 
 		va_end(args);
@@ -730,13 +730,13 @@ i8* util::va_format(const i8 *fmt, va_list args)
  * @returns the formatted string (heap allocated if dst == NULL)
  *
  * @throws std::bad_alloc
- * @throws csdbg::exception
+ * @throws instrument::exception
  */
 i8* util::va_format(i8 *dst, const i8 *fmt, va_list args)
 {
 	if ( unlikely(fmt == NULL) ) {
 		va_end(args);
-		throw exception("invalid argument: fmt (=%p)", fmt);
+		//throw exception("invalid argument: fmt (=%p)", fmt);
 	}
 
 	if ( unlikely(dst == NULL) ) {
@@ -747,7 +747,7 @@ i8* util::va_format(i8 *dst, const i8 *fmt, va_list args)
 	va_end(args);
 
 	if ( unlikely(sz < 0) ) {
-		throw exception("vsprintf failed with retval %d", sz);
+		//throw exception("vsprintf failed with retval %d", sz);
 	}
 
 	return dst;
@@ -765,20 +765,20 @@ i8* util::va_format(i8 *dst, const i8 *fmt, va_list args)
  *
  * @returns the computed size (not including the trailing '\\0')
  *
- * @throws csdbg::exception
+ * @throws instrument::exception
  */
 i32 util::va_size(const i8 *fmt, va_list args)
 {
 	if ( unlikely(fmt == NULL) ) {
 		va_end(args);
-		throw exception("invalid argument: fmt (=%p)", fmt);
+		//throw exception("invalid argument: fmt (=%p)", fmt);
 	}
 
 	i32 retval = vsnprintf(NULL, 0, fmt, args);
 	va_end(args);
 
 	if ( unlikely(retval < 0) ) {
-		throw exception("vsnprintf failed with retval %d", retval);
+		//throw exception("vsnprintf failed with retval %d", retval);
 	}
 
 	return retval;
