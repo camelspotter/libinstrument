@@ -1,5 +1,5 @@
-#ifndef _INSTRUMENT_UTIL
-#define _INSTRUMENT_UTIL 1
+#ifndef _UTIL
+#define _UTIL 1
 
 /**
 	@file include/Util.hpp

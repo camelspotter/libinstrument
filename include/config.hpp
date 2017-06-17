@@ -1,5 +1,5 @@
-#ifndef _INSTRUMENT_CONFIG
-#define _INSTRUMENT_CONFIG 1
+#ifndef _CONFIG
+#define _CONFIG 1
 
 /**
 	@file include/config.hpp
@@ -102,7 +102,7 @@ typedef unsigned int				mem_addr_t;
 /*
 	Syntax highlighter type definitions
 */
-#ifdef INSTRUMENT_WITH_HIGHLIGHT
+#ifdef WITH_HIGHLIGHT
 
 /**
 	@brief VT100 attribute bitmask
@@ -128,7 +128,7 @@ typedef struct stat					fileinfo_t;
 /*
 	Plugin system type definitions
 */
-#ifdef INSTRUMENT_WITH_PLUGIN
+#ifdef WITH_PLUGIN
 
 /**
 	@brief DSO handle
@@ -146,7 +146,7 @@ typedef void (*							modsym_t)(void*, void*);
 /*
 	TCP streaming type definitions
 */
-#ifdef INSTRUMENT_WITH_STREAM_TCP
+#ifdef WITH_STREAM_TCP
 
 /**
 	@brief TCP IPv4 address
@@ -218,7 +218,7 @@ static const u16 g_prealloc_sz = 128;
 static const i8 g_prefix[] = "/usr/local";
 
 
-#ifdef INSTRUMENT_WITH_HIGHLIGHT
+#ifdef WITH_HIGHLIGHT
 
 /**
 	@brief C++ stack trace syntax
@@ -230,7 +230,7 @@ static const i8 g_trace_syntax[] = "[ \t\n\r\\{\\}\\(\\)\\*&,:<>]+";
 #endif
 
 
-#ifdef INSTRUMENT_WITH_STREAM_TCP
+#ifdef WITH_STREAM_TCP
 
 /**
 	@brief LDP service port
@@ -293,42 +293,42 @@ namespace instrument {
 /*
 	Debug levels and assertions
 */
-#ifdef INSTRUMENT_WITH_DEBUG
+#ifdef WITH_DEBUG
 
 /**
 	@brief Error debug level
 */
-#define INSTRUMENT_DBGL_ERROR		0x01
+#define DBGL_ERROR		0x01
 
 /**
 	@brief Warning debug level
 */
-#define INSTRUMENT_DBGL_WARNING	0x02
+#define DBGL_WARNING	0x02
 
 /**
 	@brief Generic debug level
 */
-#define INSTRUMENT_DBGL_INFO			0x04
+#define DBGL_INFO			0x04
 
 /**
 	@brief Low debug level (only errors)
 */
-#define INSTRUMENT_DBGL_LOW			(INSTRUMENT_DBGL_ERROR)
+#define DBGL_LOW			(DBGL_ERROR)
 
 /**
 	@brief Medium debug level (errors and warnings)
 */
-#define INSTRUMENT_DBGL_MEDIUM		(INSTRUMENT_DBGL_LOW | INSTRUMENT_DBGL_WARNING)
+#define DBGL_MEDIUM		(DBGL_LOW | DBGL_WARNING)
 
 /**
 	@brief High debug level (all messages)
 */
-#define INSTRUMENT_DBGL_HIGH			(INSTRUMENT_DBGL_MEDIUM | INSTRUMENT_DBGL_INFO)
+#define DBGL_HIGH			(DBGL_MEDIUM | DBGL_INFO)
 
 /**
 	@brief Selected debug level
 */
-#define INSTRUMENT_DBG_LEVEL			INSTRUMENT_DBGL_HIGH
+#define DBG_LEVEL			DBGL_HIGH
 
 /**
 	@brief Assertion macro
@@ -353,7 +353,7 @@ if (!(x)) {																										\
 	Use of color in terminals (RXVT, XTerm e.t.c) to color-code message tags and
 	assertions
 */
-#ifdef INSTRUMENT_WITH_COLOR_TERM
+#ifdef WITH_COLOR_TERM
 
 /**
 	@brief Tag color for error and exception messages
@@ -378,7 +378,7 @@ if (!(x)) {																										\
 #endif
 
 
-#ifdef INSTRUMENT_WITH_COLOR_ASSERTIONS
+#ifdef WITH_COLOR_ASSERTIONS
 
 /**
 	@brief Color coded assertion macro
@@ -398,7 +398,7 @@ if (!(x)) {																										\
 /*
 	Syntax highlighter definitions
 */
-#ifdef INSTRUMENT_WITH_HIGHLIGHT
+#ifdef WITH_HIGHLIGHT
 
 /**
 	@brief Highlighter color for numbers (any base)

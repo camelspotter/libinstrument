@@ -1,5 +1,5 @@
-#ifndef _INSTRUMENT_OBJECT
-#define _INSTRUMENT_OBJECT 1
+#ifndef _OBJECT
+#define _OBJECT 1
 
 /**
 	@file include/object.hpp

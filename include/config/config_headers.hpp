@@ -1,5 +1,5 @@
-#ifndef _INSTRUMENT_CONFIG_HEADERS
-#define _INSTRUMENT_CONFIG_HEADERS 1
+#ifndef _CONFIG_HEADERS
+#define _CONFIG_HEADERS 1
 
 /**
 	@file include/config_headers.hpp
@@ -13,6 +13,8 @@
 
 #include <climits>
 #include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 #include <cstring>
 
 #ifdef __cplusplus
@@ -26,20 +28,20 @@ extern "C" {
 //#include <regex.h>
 //#include <sys/stat.h>
 
-#ifdef INSTRUMENT_WITH_HIGHLIGHT
+#ifdef WITH_HIGHLIGHT
 //#include <fcntl.h>
 //#include <sys/mman.h>
 #endif
 
-#ifdef INSTRUMENT_WITH_STREAM
+#ifdef WITH_STREAM
 //#include <sys/file.h>
 //#include <sys/time.h>
 
-#ifdef INSTRUMENT_WITH_STREAM_STTY
+#ifdef WITH_STREAM_STTY
 //#include <termios.h>
 #endif
 
-#ifdef INSTRUMENT_WITH_STREAM_TCP
+#ifdef WITH_STREAM_TCP
 //#include <arpa/inet.h>
 //#include <sys/socket.h>
 #endif

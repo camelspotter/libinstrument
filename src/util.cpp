@@ -184,7 +184,7 @@ void util::init(i32 &argc, i8 **argv)
 			argc--;
 		}
 
-#if INSTRUMENT_DBG_LEVEL & INSTRUMENT_DBGL_INFO
+#if DBG_LEVEL & DBGL_INFO
 		/* if ( unlikely(s_config->size() > 0) ) {
 			util::dbg_info("libinstrument runtime configuration:");
 		}
@@ -511,7 +511,7 @@ bool util::is_writable(const fileinfo_t &inf)
  */
 void util::dbg(console_tag_t tag, const i8 *fmt, va_list args)
 {
-#ifdef INSTRUMENT_WITH_DEBUG
+#ifdef WITH_DEBUG
 	__D_ASSERT(tag != NULL);
 	__D_ASSERT(fmt != NULL);
 	if ( unlikely(tag == NULL || fmt == NULL) ) {
@@ -550,7 +550,7 @@ void util::dbg(console_tag_t tag, const i8 *fmt, va_list args)
  */
 void util::dbg_error(const i8 *fmt, ...)
 {
-#if INSTRUMENT_DBG_LEVEL & INSTRUMENT_DBGL_ERROR
+#if DBG_LEVEL & DBGL_ERROR
 	__D_ASSERT(fmt != NULL);
 	if ( unlikely(fmt == NULL) ) {
 		return;
@@ -574,7 +574,7 @@ void util::dbg_error(const i8 *fmt, ...)
  */
 void util::dbg_info(const i8 *fmt, ...)
 {
-#if INSTRUMENT_DBG_LEVEL & INSTRUMENT_DBGL_INFO
+#if DBG_LEVEL & DBGL_INFO
 	__D_ASSERT(fmt != NULL);
 	if ( unlikely(fmt == NULL) ) {
 		return;
@@ -598,7 +598,7 @@ void util::dbg_info(const i8 *fmt, ...)
  */
 void util::dbg_warn(const i8 *fmt, ...)
 {
-#if INSTRUMENT_DBG_LEVEL & INSTRUMENT_DBGL_WARNING
+#if DBG_LEVEL & DBGL_WARNING
 	__D_ASSERT(fmt != NULL);
 	if ( unlikely(fmt == NULL) ) {
 		return;
@@ -625,7 +625,7 @@ void util::header(std::ostream &stream, console_tag_t tag)
 		return;
 	}
 
-#ifdef INSTRUMENT_WITH_COLOR_TERM
+#ifdef WITH_COLOR_TERM
 	u32 fg = EXCEPTION_TAG_FG;
 	if ( likely(is_error(tag)) ) {
 		fg = ERROR_TAG_FG;
