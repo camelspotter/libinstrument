@@ -58,18 +58,22 @@ SET(src_root	src)
 SET(hdr_root	include)
 
 SET(sources	${src_root}/call.cpp
+		${src_root}/chain.cpp
 		${src_root}/exception.cpp
 		${src_root}/node.cpp
 		${src_root}/object.cpp
+		${src_root}/stack.cpp
 		${src_root}/symbol.cpp
 		${src_root}/util.cpp)
 
 SET(headers	${hdr_root}/call.hpp
+		${hdr_root}/chain.hpp
 		${hdr_root}/config.hpp
 		${hdr_root}/config/config_headers.hpp
 		${hdr_root}/exception.hpp
 		${hdr_root}/node.hpp
 		${hdr_root}/object.hpp
+		${hdr_root}/stack.hpp
 		${hdr_root}/symbol.hpp
 		${hdr_root}/util.hpp)
                   
