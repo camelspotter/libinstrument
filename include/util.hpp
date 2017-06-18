@@ -8,7 +8,7 @@
 */
 
 //#include "./string.hpp"
-#include "./object.hpp"
+#include "./exception.hpp"
 
 namespace instrument {
 

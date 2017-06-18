@@ -92,7 +92,7 @@ const i8* util::executable_path()
 	i8 path[PATH_MAX + 1];
 	i32 len = snprintf(path, PATH_MAX + 1, "/proc/%d/exe", getpid());
 	if ( unlikely(len < 0) ) {
-		//throw exception("snprintf failed with retval %d", len);
+		throw exception("snprintf failed with retval %d", len);
 	}
 
 	i8 *retval = new i8[PATH_MAX + 1];
@@ -102,11 +102,11 @@ const i8* util::executable_path()
 	if ( unlikely(len < 0) ) {
 		delete[] retval;
 
-		/*throw exception(
+		throw exception(
 			"failed to read symlink '%s' (errno %d - %s)",
 			path,
 			errno,
-			strerror(errno));*/
+			strerror(errno));
 	}
 
 	retval[len] = '\0';
@@ -196,11 +196,11 @@ void util::init(i32 &argc, i8 **argv)
 
 		return;
 	}
-	/*catch (exception &x) {
+	catch (exception &x) {
 		std::cerr << x;
-	}*/
+	}
 	catch (std::exception &x) {
-		//std::cerr << x;
+		std::cerr << x;
 	}
 
 	exit(EXIT_FAILURE);
@@ -299,7 +299,7 @@ i32 util::memcmp(const void *b1, const void *b2, u32 sz)
 	__D_ASSERT(b1 != NULL);
 	__D_ASSERT(b2 != NULL);
 	if ( unlikely(b1 == NULL || b2 == NULL) ) {
-		//throw exception("invalid argument: b1 (=%p) and/or b2 (=%p)", b1, b2);
+		throw exception("invalid argument: b1 (=%p) and/or b2 (=%p)", b1, b2);
 	}
 
 	const u8 *p1 = static_cast<const u8*> (b1);
@@ -687,7 +687,7 @@ i8* util::va_format(const i8 *fmt, va_list args)
 {
 	if ( unlikely(fmt == NULL) ) {
 		va_end(args);
-		//throw exception("invalid argument: fmt (=%p)", fmt);
+		throw exception("invalid argument: fmt (=%p)", fmt);
 	}
 
 	va_list cpargs;
@@ -700,7 +700,7 @@ i8* util::va_format(const i8 *fmt, va_list args)
 
 		i32 check = vsprintf(retval, fmt, args);
 		if ( unlikely(check != sz) ) {
-			//throw exception("vsprintf failed with retval %d", check);
+			throw exception("vsprintf failed with retval %d", check);
 		}
 
 		va_end(args);
@@ -736,7 +736,7 @@ i8* util::va_format(i8 *dst, const i8 *fmt, va_list args)
 {
 	if ( unlikely(fmt == NULL) ) {
 		va_end(args);
-		//throw exception("invalid argument: fmt (=%p)", fmt);
+		throw exception("invalid argument: fmt (=%p)", fmt);
 	}
 
 	if ( unlikely(dst == NULL) ) {
@@ -747,7 +747,7 @@ i8* util::va_format(i8 *dst, const i8 *fmt, va_list args)
 	va_end(args);
 
 	if ( unlikely(sz < 0) ) {
-		//throw exception("vsprintf failed with retval %d", sz);
+		throw exception("vsprintf failed with retval %d", sz);
 	}
 
 	return dst;
@@ -771,14 +771,14 @@ i32 util::va_size(const i8 *fmt, va_list args)
 {
 	if ( unlikely(fmt == NULL) ) {
 		va_end(args);
-		//throw exception("invalid argument: fmt (=%p)", fmt);
+		throw exception("invalid argument: fmt (=%p)", fmt);
 	}
 
 	i32 retval = vsnprintf(NULL, 0, fmt, args);
 	va_end(args);
 
 	if ( unlikely(retval < 0) ) {
-		//throw exception("vsnprintf failed with retval %d", retval);
+		throw exception("vsnprintf failed with retval %d", retval);
 	}
 
 	return retval;

@@ -5,6 +5,9 @@ SET(CMAKE_CXX_COMPILER	/usr/bin/g++)
 SET(CMAKE_C_COMPILER	/usr/bin/gcc)
 
 PROJECT(${project_name} C CXX)
+SET(${project_name}_VERSION_MAJOR 1)
+SET(${project_name}_VERSION_MINOR 0)
+SET(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/.build)
 
 # Fixed -D options
 ADD_DEFINITIONS(-D_REENTRANT			# thread safety
@@ -54,16 +57,23 @@ ADD_DEFINITIONS(-Wall
 SET(src_root	src)
 SET(hdr_root	include)
 
-SET(sources	${src_root}/exception.cpp
+SET(sources	${src_root}/call.cpp
+		${src_root}/exception.cpp
+		${src_root}/node.cpp
 		${src_root}/object.cpp
+		${src_root}/symbol.cpp
 		${src_root}/util.cpp)
 
-SET(headers	${hdr_root}/config.hpp
+SET(headers	${hdr_root}/call.hpp
+		${hdr_root}/config.hpp
 		${hdr_root}/config/config_headers.hpp
 		${hdr_root}/exception.hpp
+		${hdr_root}/node.hpp
 		${hdr_root}/object.hpp
+		${hdr_root}/symbol.hpp
 		${hdr_root}/util.hpp)
                   
 ADD_LIBRARY(${project_name} SHARED ${sources} ${headers})
 
 MESSAGE(STATUS "Build system generated")
+		
