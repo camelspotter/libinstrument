@@ -25,7 +25,7 @@ extern "C" {
 //#include <bfd.h>
 //#include <link.h>
 #include <pthread.h>
-//#include <regex.h>
+#include <regex.h>
 //#include <sys/stat.h>
 
 #ifdef WITH_HIGHLIGHT

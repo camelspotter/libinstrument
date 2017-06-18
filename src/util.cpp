@@ -11,7 +11,7 @@ namespace instrument {
 
 /* Static member variable definition */
 
-//chain<string> *util::s_config = NULL;
+chain<string> *util::s_config = NULL;
 
 pthread_mutex_t util::s_global_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
@@ -24,11 +24,11 @@ pthread_mutex_t util::s_global_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 void util::on_lib_load()
 {
 	try {
-		//s_config = new chain<string>;
+		s_config = new chain<string>;
 		return;
 	}
 	catch (std::exception &x) {
-		//std::cerr << x;
+		std::cerr << x;
 	}
 
 	exit(EXIT_FAILURE);
@@ -40,8 +40,8 @@ void util::on_lib_load()
  */
 void util::on_lib_unload()
 {
-	//delete s_config;
-	//s_config = NULL;
+	delete s_config;
+	s_config = NULL;
 	unlock();
 }
 
@@ -53,7 +53,7 @@ void util::on_lib_unload()
  */
 u32 util::argc()
 {
-	return 0;//s_config->size();
+	return s_config->size();
 }
 
 
@@ -67,11 +67,11 @@ u32 util::argc()
  * @throws instrument::exception
  *
  * @see util::init
- /
+ */
 const string* util::argv(u32 i)
 {
 	return s_config->at(i);
-} */
+}
 
 
 /**
@@ -123,7 +123,7 @@ const i8* util::executable_path()
  *
  * @throws std::bad_alloc
  * @throws instrument::exception
- /
+ */
 chain<string>* util::getenv(const i8 *var)
 {
 	__D_ASSERT(var != NULL);
@@ -138,7 +138,7 @@ chain<string>* util::getenv(const i8 *var)
 
 	string tmp(val);
 	return tmp.split(":+");
-} */
+}
 
 
 /**
@@ -172,7 +172,7 @@ void util::init(i32 &argc, i8 **argv)
 			}
 
 			if ( likely(strlen(arg) > 13) ) {
-				//s_config->add(new string(arg + 13));
+				s_config->add(new string(arg + 13));
 			}
 
 			/* Remove it from the argument vector */
@@ -185,13 +185,17 @@ void util::init(i32 &argc, i8 **argv)
 		}
 
 #if DBG_LEVEL & DBGL_INFO
-		/* if ( unlikely(s_config->size() > 0) ) {
+		if ( unlikely(s_config->size() > 0) ) {
 			util::dbg_info("libinstrument runtime configuration:");
 		}
 
 		for (u32 i = 0, sz = s_config->size(); likely(i < sz); i++) {
-			util::dbg_info("  arg %d: --instrument-(%s)", i, s_config->at(i)->cstring());
-		}*/
+			const i8 *option =
+				s_config->at(i)
+								->cstring();
+
+			util::dbg_info("  arg %d: --instrument-(%s)", i, option);
+		}
 #endif
 
 		return;

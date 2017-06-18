@@ -7,8 +7,7 @@
 	@brief Class instrument::util definition
 */
 
-//#include "./string.hpp"
-#include "./exception.hpp"
+#include "./string.hpp"
 
 namespace instrument {
 
@@ -21,7 +20,7 @@ protected:
 
 	/* Protected static variables */
 
-	//static chain<string> *s_config;						/**< @brief Runtime configuration */
+	static chain<string> *s_config;						/**< @brief Runtime configuration */
 
 	static pthread_mutex_t s_global_lock;		/**< @brief Global access mutex */
 
@@ -40,11 +39,11 @@ public:
 
 	static u32 argc();
 
-	//static const string* argv(u32);
+	static const string* argv(u32);
 
 	static const i8* executable_path();
 
-	//static chain<string>* getenv(const i8*);
+	static chain<string>* getenv(const i8*);
 
 	static void init(i32&, i8**);
 

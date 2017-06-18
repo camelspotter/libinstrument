@@ -4,10 +4,12 @@ SET(project_name instrument)
 SET(CMAKE_CXX_COMPILER	/usr/bin/g++)
 SET(CMAKE_C_COMPILER	/usr/bin/gcc)
 
-PROJECT(${project_name} C CXX)
-SET(${project_name}_VERSION_MAJOR 1)
-SET(${project_name}_VERSION_MINOR 0)
-SET(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/.build)
+PROJECT(${project_name}			C CXX)
+SET(${project_name}_VERSION_MAJOR	1)
+SET(${project_name}_VERSION_MINOR	0)
+
+SET(CMAKE_BINARY_DIR		${CMAKE_SOURCE_DIR}/.build)
+SET(CMAKE_INSTALL_PREFIX	/usr/local)
 
 # Fixed -D options
 ADD_DEFINITIONS(-D_REENTRANT			# thread safety
@@ -60,9 +62,11 @@ SET(hdr_root	include)
 SET(sources	${src_root}/call.cpp
 		${src_root}/chain.cpp
 		${src_root}/exception.cpp
+		${src_root}/list.cpp
 		${src_root}/node.cpp
 		${src_root}/object.cpp
 		${src_root}/stack.cpp
+		${src_root}/string.cpp
 		${src_root}/symbol.cpp
 		${src_root}/util.cpp)
 
@@ -71,9 +75,11 @@ SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/config.hpp
 		${hdr_root}/config/config_headers.hpp
 		${hdr_root}/exception.hpp
+		${hdr_root}/list.hpp
 		${hdr_root}/node.hpp
 		${hdr_root}/object.hpp
 		${hdr_root}/stack.hpp
+		${hdr_root}/string.hpp
 		${hdr_root}/symbol.hpp
 		${hdr_root}/util.hpp)
                   
