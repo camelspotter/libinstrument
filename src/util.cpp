@@ -440,7 +440,7 @@ void util::unlock()
  * @param[in] inf the file info
  *
  * @returns true if it is a character device node, false otherwise
- /
+ */
 bool util::is_chardev(const fileinfo_t &inf)
 {
 	return S_ISCHR(inf.st_mode);
@@ -453,7 +453,7 @@ bool util::is_chardev(const fileinfo_t &inf)
  * @param[in] inf the file info
  *
  * @returns true if it is readable, false otherwise
- /
+ */
 bool util::is_readable(const fileinfo_t &inf)
 {
 	if ( likely(geteuid() == inf.st_uid && (inf.st_mode & S_IRUSR)) ) {
@@ -474,7 +474,7 @@ bool util::is_readable(const fileinfo_t &inf)
  * @param[in] inf the file info
  *
  * @returns true if it is regular, false otherwise
- /
+ */
 bool util::is_regular(const fileinfo_t &inf)
 {
 	return S_ISREG(inf.st_mode);
@@ -487,7 +487,7 @@ bool util::is_regular(const fileinfo_t &inf)
  * @param[in] inf the file info
  *
  * @returns true if it is writable, false otherwise
- /
+ */
 bool util::is_writable(const fileinfo_t &inf)
 {
 	if ( likely(geteuid() == inf.st_uid && (inf.st_mode & S_IWUSR)) ) {

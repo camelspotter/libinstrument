@@ -73,13 +73,13 @@ public:
 
 	/* Utility methods */
 
-	//static bool is_chardev(const fileinfo_t&);
+	static bool is_chardev(const fileinfo_t&);
 
-	//static bool is_readable(const fileinfo_t&);
+	static bool is_readable(const fileinfo_t&);
 
-	//static bool is_regular(const fileinfo_t&);
+	static bool is_regular(const fileinfo_t&);
 
-	//static bool is_writable(const fileinfo_t&);
+	static bool is_writable(const fileinfo_t&);
 
 
 	/* Output and debug methods */

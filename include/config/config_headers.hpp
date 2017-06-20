@@ -22,11 +22,11 @@ extern "C" {
 #endif
 
 #include <cxxabi.h>
-//#include <bfd.h>
+#include <bfd.h>
 //#include <link.h>
 #include <pthread.h>
 #include <regex.h>
-//#include <sys/stat.h>
+#include <sys/stat.h>
 
 #ifdef WITH_HIGHLIGHT
 //#include <fcntl.h>
