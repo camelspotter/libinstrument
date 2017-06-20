@@ -23,7 +23,7 @@ extern "C" {
 
 #include <cxxabi.h>
 #include <bfd.h>
-//#include <link.h>
+#include <link.h>
 #include <pthread.h>
 #include <regex.h>
 #include <sys/stat.h>
