@@ -65,6 +65,7 @@ SET(sources	${src_root}/call.cpp
 		${src_root}/list.cpp
 		${src_root}/node.cpp
 		${src_root}/object.cpp
+		${src_root}/process.cpp
 		${src_root}/stack.cpp
 		${src_root}/string.cpp
 		${src_root}/symbol.cpp
@@ -80,6 +81,7 @@ SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/list.hpp
 		${hdr_root}/node.hpp
 		${hdr_root}/object.hpp
+		${hdr_root}/process.hpp
 		${hdr_root}/stack.hpp
 		${hdr_root}/string.hpp
 		${hdr_root}/symbol.hpp
