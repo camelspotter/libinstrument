@@ -69,6 +69,7 @@ SET(sources	${src_root}/call.cpp
 		${src_root}/string.cpp
 		${src_root}/symbol.cpp
 		${src_root}/symtab.cpp
+		${src_root}/thread.cpp
 		${src_root}/util.cpp)
 
 SET(headers	${hdr_root}/call.hpp
@@ -83,6 +84,7 @@ SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/string.hpp
 		${hdr_root}/symbol.hpp
 		${hdr_root}/symtab.hpp
+		${hdr_root}/thread.hpp
 		${hdr_root}/util.hpp)
                   
 ADD_LIBRARY(${project_name} SHARED ${sources} ${headers})
