@@ -20,7 +20,13 @@ ADD_DEFINITIONS(-D_REENTRANT			# thread safety
 		-DWITH_HIGHLIGHT		# support C++ trace syntax highlighting
 		-DWITH_PLUGIN			# support instrumentation plugins
 		-DWITH_STREAM			# support buffered output streams
-		-DWITH_UNRESOLVED)		# print unresolved symbols in traces
+		-DWITH_UNRESOLVED		# print unresolved symbols in traces
+		
+		-DWITH_SYMBOL_ENUMERATION
+		-DWITH_STREAM_FILE
+		-DWITH_STREAM_STTY
+		-DWITH_STREAM_TCP)
+
 
 # -f options
 ADD_DEFINITIONS(-fno-enforce-eh-specs
@@ -63,6 +69,7 @@ SET(sources	${src_root}/call.cpp
 		${src_root}/chain.cpp
 		${src_root}/dictionary.cpp
 		${src_root}/exception.cpp
+		${src_root}/file.cpp
 		${src_root}/filter.cpp
 		${src_root}/list.cpp
 		${src_root}/node.cpp
@@ -73,6 +80,7 @@ SET(sources	${src_root}/call.cpp
 		${src_root}/stack.cpp
 		${src_root}/stream.cpp
 		${src_root}/string.cpp
+		${src_root}/stty.cpp
 		${src_root}/style.cpp
 		${src_root}/symbol.cpp
 		${src_root}/symtab.cpp
@@ -86,6 +94,7 @@ SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/config/config_headers.hpp
 		${hdr_root}/dictionary.hpp
 		${hdr_root}/exception.hpp
+		${hdr_root}/file.hpp
 		${hdr_root}/filter.hpp
 		${hdr_root}/list.hpp
 		${hdr_root}/node.hpp
@@ -96,6 +105,7 @@ SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/stack.hpp
 		${hdr_root}/stream.hpp
 		${hdr_root}/string.hpp
+		${hdr_root}/stty.hpp
 		${hdr_root}/style.hpp
 		${hdr_root}/symbol.hpp
 		${hdr_root}/symtab.hpp

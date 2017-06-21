@@ -38,7 +38,7 @@ extern "C" {
 #include <sys/time.h>
 
 #ifdef WITH_STREAM_STTY
-//#include <termios.h>
+#include <termios.h>
 #endif
 
 #ifdef WITH_STREAM_TCP
