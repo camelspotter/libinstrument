@@ -16,9 +16,9 @@ ADD_DEFINITIONS(-D_REENTRANT			# thread safety
 		-DWITH_COLOR_ASSERTIONS		# color-coded assertions
 		-DWITH_COLOR_TERM		# support color terminals (VT100)
 		-DWITH_DEBUG			# include debugging code
-		-DWITHOUT_FILTER		# support instrumentation filters
+		-DWITH_FILTER			# support instrumentation filters
 		-DWITH_HIGHLIGHT		# support C++ trace syntax highlighting
-		-DWITHOUT_PLUGIN		# support instrumentation plugins
+		-DWITH_PLUGIN			# support instrumentation plugins
 		-DWITH_STREAM			# support buffered output streams
 		-DWITH_UNRESOLVED)		# print unresolved symbols in traces
 
@@ -63,10 +63,12 @@ SET(sources	${src_root}/call.cpp
 		${src_root}/chain.cpp
 		${src_root}/dictionary.cpp
 		${src_root}/exception.cpp
+		${src_root}/filter.cpp
 		${src_root}/list.cpp
 		${src_root}/node.cpp
 		${src_root}/object.cpp
 		${src_root}/parser.cpp
+		${src_root}/plugin.cpp
 		${src_root}/process.cpp
 		${src_root}/stack.cpp
 		${src_root}/string.cpp
@@ -80,13 +82,15 @@ SET(sources	${src_root}/call.cpp
 SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/chain.hpp
 		${hdr_root}/config.hpp
-		${hdr_root}/dictionary.hpp
 		${hdr_root}/config/config_headers.hpp
+		${hdr_root}/dictionary.hpp
 		${hdr_root}/exception.hpp
+		${hdr_root}/filter.hpp
 		${hdr_root}/list.hpp
 		${hdr_root}/node.hpp
 		${hdr_root}/object.hpp
 		${hdr_root}/parser.hpp
+		${hdr_root}/plugin.hpp
 		${hdr_root}/process.hpp
 		${hdr_root}/stack.hpp
 		${hdr_root}/string.hpp
