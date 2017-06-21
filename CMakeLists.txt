@@ -61,13 +61,16 @@ SET(hdr_root	include)
 
 SET(sources	${src_root}/call.cpp
 		${src_root}/chain.cpp
+		${src_root}/dictionary.cpp
 		${src_root}/exception.cpp
 		${src_root}/list.cpp
 		${src_root}/node.cpp
 		${src_root}/object.cpp
+		${src_root}/parser.cpp
 		${src_root}/process.cpp
 		${src_root}/stack.cpp
 		${src_root}/string.cpp
+		${src_root}/style.cpp
 		${src_root}/symbol.cpp
 		${src_root}/symtab.cpp
 		${src_root}/thread.cpp
@@ -77,14 +80,17 @@ SET(sources	${src_root}/call.cpp
 SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/chain.hpp
 		${hdr_root}/config.hpp
+		${hdr_root}/dictionary.hpp
 		${hdr_root}/config/config_headers.hpp
 		${hdr_root}/exception.hpp
 		${hdr_root}/list.hpp
 		${hdr_root}/node.hpp
 		${hdr_root}/object.hpp
+		${hdr_root}/parser.hpp
 		${hdr_root}/process.hpp
 		${hdr_root}/stack.hpp
 		${hdr_root}/string.hpp
+		${hdr_root}/style.hpp
 		${hdr_root}/symbol.hpp
 		${hdr_root}/symtab.hpp
 		${hdr_root}/thread.hpp

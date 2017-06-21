@@ -29,8 +29,8 @@ extern "C" {
 #include <sys/stat.h>
 
 #ifdef WITH_HIGHLIGHT
-//#include <fcntl.h>
-//#include <sys/mman.h>
+#include <fcntl.h>
+#include <sys/mman.h>
 #endif
 
 #ifdef WITH_STREAM
