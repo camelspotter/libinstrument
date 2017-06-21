@@ -1,4 +1,4 @@
-//#include "../include/tracer.hpp"
+#include "../include/tracer.hpp"
 #include "../include/util.hpp"
 
 /**
@@ -659,13 +659,13 @@ void util::header(std::ostream &stream, console_tag_t tag)
 				 << pthread_self();
 
 	const i8 *name = NULL;
-	/*const tracer *iface = tracer::interface();
+	const tracer *iface = tracer::interface();
 	if ( likely(iface != NULL) ) {
 		name =
 			iface->proc()
 					 ->current_thread()
 					 ->name();
-	}*/
+	}
 
 	stream << " ("
 				 << ((likely(name != NULL)) ? name : "anonymous")
