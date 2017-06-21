@@ -71,6 +71,7 @@ SET(sources	${src_root}/call.cpp
 		${src_root}/plugin.cpp
 		${src_root}/process.cpp
 		${src_root}/stack.cpp
+		${src_root}/stream.cpp
 		${src_root}/string.cpp
 		${src_root}/style.cpp
 		${src_root}/symbol.cpp
@@ -93,6 +94,7 @@ SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/plugin.hpp
 		${hdr_root}/process.hpp
 		${hdr_root}/stack.hpp
+		${hdr_root}/stream.hpp
 		${hdr_root}/string.hpp
 		${hdr_root}/style.hpp
 		${hdr_root}/symbol.hpp
@@ -100,8 +102,7 @@ SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/thread.hpp
 		${hdr_root}/tracer.hpp
 		${hdr_root}/util.hpp)
-                  
+
 ADD_LIBRARY(${project_name} SHARED ${sources} ${headers})
 
 MESSAGE(STATUS "Build system generated")
-		

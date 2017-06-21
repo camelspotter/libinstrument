@@ -34,8 +34,8 @@ extern "C" {
 #endif
 
 #ifdef WITH_STREAM
-//#include <sys/file.h>
-//#include <sys/time.h>
+#include <sys/file.h>
+#include <sys/time.h>
 
 #ifdef WITH_STREAM_STTY
 //#include <termios.h>
