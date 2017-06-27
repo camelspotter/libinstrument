@@ -21,7 +21,7 @@ ADD_DEFINITIONS(-D_REENTRANT			# thread safety
 		-DWITH_PLUGIN			# support instrumentation plugins
 		-DWITH_STREAM			# support buffered output streams
 		-DWITH_UNRESOLVED		# print unresolved symbols in traces
-		
+
 		-DWITH_SYMBOL_ENUMERATION
 		-DWITH_STREAM_FILE
 		-DWITH_STREAM_STTY
@@ -84,6 +84,7 @@ SET(sources	${src_root}/call.cpp
 		${src_root}/style.cpp
 		${src_root}/symbol.cpp
 		${src_root}/symtab.cpp
+		${src_root}/tcp_socket.cpp
 		${src_root}/thread.cpp
 		${src_root}/tracer.cpp
 		${src_root}/util.cpp)
@@ -109,6 +110,7 @@ SET(headers	${hdr_root}/call.hpp
 		${hdr_root}/style.hpp
 		${hdr_root}/symbol.hpp
 		${hdr_root}/symtab.hpp
+		${hdr_root}/tcp_socket.hpp
 		${hdr_root}/thread.hpp
 		${hdr_root}/tracer.hpp
 		${hdr_root}/util.hpp)

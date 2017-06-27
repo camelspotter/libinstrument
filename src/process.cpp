@@ -122,6 +122,8 @@ process& process::operator=(const process &rval)
  *
  * @throws std::bad_alloc
  * @throws instrument::exception
+ *
+ * @todo Return the newly created thread
  */
 process& process::fork_thread(const i8 *nm,
 															 thread_main_t entry,
