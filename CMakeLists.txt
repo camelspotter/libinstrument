@@ -1,120 +1,167 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.8)
 
-SET(project_name instrument)
-SET(CMAKE_CXX_COMPILER	/usr/bin/g++)
-SET(CMAKE_C_COMPILER	/usr/bin/gcc)
 
-PROJECT(${project_name}			C CXX)
-SET(${project_name}_VERSION_MAJOR	1)
-SET(${project_name}_VERSION_MINOR	0)
+# Project definition
 
-SET(CMAKE_BINARY_DIR		${CMAKE_SOURCE_DIR}/.build)
+PROJECT(instrument C CXX)
+
+SET(${PROJECT_NAME}_VERSION_MAJOR 1)
+
+SET(${PROJECT_NAME}_VERSION_MINOR 0)
+
 SET(CMAKE_INSTALL_PREFIX	/usr/local)
 
-# Fixed -D options
-ADD_DEFINITIONS(-D_REENTRANT			# thread safety
-		-DWITH_COLOR_ASSERTIONS		# color-coded assertions
-		-DWITH_COLOR_TERM		# support color terminals (VT100)
-		-DWITH_DEBUG			# include debugging code
-		-DWITH_FILTER			# support instrumentation filters
-		-DWITH_HIGHLIGHT		# support C++ trace syntax highlighting
-		-DWITH_PLUGIN			# support instrumentation plugins
-		-DWITH_STREAM			# support buffered output streams
-		-DWITH_UNRESOLVED		# print unresolved symbols in traces
 
-		-DWITH_SYMBOL_ENUMERATION
-		-DWITH_STREAM_FILE
-		-DWITH_STREAM_STTY
-		-DWITH_STREAM_TCP)
+# Source and header files listings
+
+SET(SRC_ROOT src)
+
+SET(HDR_ROOT include)
+
+SET(SOURCES
+	${SRC_ROOT}/call.cpp
+	${SRC_ROOT}/chain.cpp
+	${SRC_ROOT}/dictionary.cpp
+	${SRC_ROOT}/exception.cpp
+	${SRC_ROOT}/file.cpp
+	${SRC_ROOT}/filter.cpp
+	${SRC_ROOT}/list.cpp
+	${SRC_ROOT}/node.cpp
+	${SRC_ROOT}/object.cpp
+	${SRC_ROOT}/parser.cpp
+	${SRC_ROOT}/plugin.cpp
+	${SRC_ROOT}/process.cpp
+	${SRC_ROOT}/stack.cpp
+	${SRC_ROOT}/stream.cpp
+	${SRC_ROOT}/string.cpp
+	${SRC_ROOT}/stty.cpp
+	${SRC_ROOT}/style.cpp
+	${SRC_ROOT}/symbol.cpp
+	${SRC_ROOT}/symtab.cpp
+	${SRC_ROOT}/tcp_socket.cpp
+	${SRC_ROOT}/thread.cpp
+	${SRC_ROOT}/tracer.cpp
+	${SRC_ROOT}/util.cpp
+)
+
+SET(HEADERS
+	${HDR_ROOT}/call.hpp
+	${HDR_ROOT}/chain.hpp
+	${HDR_ROOT}/config.hpp
+	${HDR_ROOT}/config/config_definitions.hpp
+	${HDR_ROOT}/config/config_globals.hpp
+	${HDR_ROOT}/config/config_headers.hpp
+	${HDR_ROOT}/config/config_macros.hpp
+	${HDR_ROOT}/config/config_types.hpp
+	${HDR_ROOT}/dictionary.hpp
+	${HDR_ROOT}/exception.hpp
+	${HDR_ROOT}/file.hpp
+	${HDR_ROOT}/filter.hpp
+	${HDR_ROOT}/list.hpp
+	${HDR_ROOT}/node.hpp
+	${HDR_ROOT}/object.hpp
+	${HDR_ROOT}/parser.hpp
+	${HDR_ROOT}/plugin.hpp
+	${HDR_ROOT}/process.hpp
+	${HDR_ROOT}/stack.hpp
+	${HDR_ROOT}/stream.hpp
+	${HDR_ROOT}/string.hpp
+	${HDR_ROOT}/stty.hpp
+	${HDR_ROOT}/style.hpp
+	${HDR_ROOT}/symbol.hpp
+	${HDR_ROOT}/symtab.hpp
+	${HDR_ROOT}/tcp_socket.hpp
+	${HDR_ROOT}/thread.hpp
+	${HDR_ROOT}/tracer.hpp
+	${HDR_ROOT}/util.hpp
+)
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
+
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+	SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}
+)
+
+
+# Fixed -D options
+
+TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC
+	-D_REENTRANT							# thread safety
+	-DWITH_COLOR_ASSERTIONS		# color-coded assertions
+	-DWITH_COLOR_TERM					# support color terminals (VT100)
+	-DWITH_DEBUG							# include debugging code
+	-DWITH_FILTER							# support instrumentation filters
+	-DWITH_HIGHLIGHT					# support C++ trace syntax highlighting
+	-DWITH_PLUGIN							# support instrumentation plugins
+	-DWITH_STREAM							# support buffered output streams
+	-DWITH_UNRESOLVED					# print unresolved symbols in traces
+
+	-DWITH_SYMBOL_ENUMERATION
+	-DWITH_STREAM_FILE
+	-DWITH_STREAM_STTY
+	-DWITH_STREAM_TCP
+)
 
 
 # -f options
-ADD_DEFINITIONS(-fno-enforce-eh-specs
-		-fPIC
-		-fstrict-aliasing)
+
+TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
+	-fno-enforce-eh-specs
+	-fPIC
+	-fstrict-aliasing
+)
+
 
 # Generic options
-ADD_DEFINITIONS(-O2
-		-march=native
-		-rdynamic
-		-std=gnu++0x)
+
+TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
+	-O2
+	-march=native
+	-rdynamic
+	-std=gnu++0x
+)
+
 
 # -W options
-ADD_DEFINITIONS(-Wall
-		-Wabi
-		-Wcast-align
-		-Wcast-qual
-		-Wclobbered
-		-Wctor-dtor-privacy
-		-Wdisabled-optimization
-		-Wempty-body
-		-Wformat-security
-		-Winit-self
-		-Wlogical-op
-		-Wmissing-field-initializers
-		-Wmissing-include-dirs
-		-Wmissing-noreturn
-		-Wnon-virtual-dtor
-		-Woverlength-strings
-		-Wpacked
-		-Wredundant-decls
-		-Wsign-compare
-		-Wswitch-enum
-		-Wtype-limits)
 
-SET(src_root	src)
-SET(hdr_root	include)
+TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
+	-Wall
+	-Wabi
+	-Wcast-align
+	-Wcast-qual
+	-Wclobbered
+	-Wctor-dtor-privacy
+	-Wdisabled-optimization
+	-Wempty-body
+	-Wformat-security
+	-Winit-self
+	-Wlogical-op
+	-Wmissing-field-initializers
+	-Wmissing-include-dirs
+	-Wmissing-noreturn
+	-Wnon-virtual-dtor
+	-Woverlength-strings
+	-Wpacked
+	-Wredundant-decls
+	-Wsign-compare
+	-Wswitch-enum
+	-Wtype-limits
+)
 
-SET(sources	${src_root}/call.cpp
-		${src_root}/chain.cpp
-		${src_root}/dictionary.cpp
-		${src_root}/exception.cpp
-		${src_root}/file.cpp
-		${src_root}/filter.cpp
-		${src_root}/list.cpp
-		${src_root}/node.cpp
-		${src_root}/object.cpp
-		${src_root}/parser.cpp
-		${src_root}/plugin.cpp
-		${src_root}/process.cpp
-		${src_root}/stack.cpp
-		${src_root}/stream.cpp
-		${src_root}/string.cpp
-		${src_root}/stty.cpp
-		${src_root}/style.cpp
-		${src_root}/symbol.cpp
-		${src_root}/symtab.cpp
-		${src_root}/tcp_socket.cpp
-		${src_root}/thread.cpp
-		${src_root}/tracer.cpp
-		${src_root}/util.cpp)
 
-SET(headers	${hdr_root}/call.hpp
-		${hdr_root}/chain.hpp
-		${hdr_root}/config.hpp
-		${hdr_root}/config/config_headers.hpp
-		${hdr_root}/dictionary.hpp
-		${hdr_root}/exception.hpp
-		${hdr_root}/file.hpp
-		${hdr_root}/filter.hpp
-		${hdr_root}/list.hpp
-		${hdr_root}/node.hpp
-		${hdr_root}/object.hpp
-		${hdr_root}/parser.hpp
-		${hdr_root}/plugin.hpp
-		${hdr_root}/process.hpp
-		${hdr_root}/stack.hpp
-		${hdr_root}/stream.hpp
-		${hdr_root}/string.hpp
-		${hdr_root}/stty.hpp
-		${hdr_root}/style.hpp
-		${hdr_root}/symbol.hpp
-		${hdr_root}/symtab.hpp
-		${hdr_root}/tcp_socket.hpp
-		${hdr_root}/thread.hpp
-		${hdr_root}/tracer.hpp
-		${hdr_root}/util.hpp)
+# Installation rules
 
-ADD_LIBRARY(${project_name} SHARED ${sources} ${headers})
+INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
 
-MESSAGE(STATUS "Build system generated")
+INSTALL(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
+
+install(PROGRAMS extra/vtcolors DESTINATION bin)
+
+install(FILES extra/extensions.dict extra/keywords.dict extra/types.dict DESTINATION etc)
+
+
+GET_PROPERTY(DEFS TARGET ${PROJECT_NAME} PROPERTY COMPILE_DEFINITIONS)
+MESSAGE(STATUS "Definitions " ${DEFS})
+
+GET_PROPERTY(FLAGS TARGET ${PROJECT_NAME} PROPERTY COMPILE_OPTIONS)
+MESSAGE(STATUS "Flags " ${FLAGS})

@@ -1,0 +1,45 @@
+#ifndef _INSTRUMENT
+#define _INSTRUMENT 1
+
+#define _REENTRANT
+#define WITH_COLOR_ASSERTIONS
+#define WITH_COLOR_TERM
+#define WITH_DEBUG
+#define WITH_FILTER
+#define WITH_HIGHLIGHT
+#define WITH_PLUGIN
+#define WITH_STREAM
+#define WITH_UNRESOLVED
+
+#define WITH_SYMBOL_ENUMERATION
+#define WITH_STREAM_FILE
+#define WITH_STREAM_STTY
+#define WITH_STREAM_TCP
+
+#include "instrument/config.hpp"
+
+#include "instrument/call.hpp"
+#include "instrument/chain.hpp"
+#include "instrument/dictionary.hpp"
+#include "instrument/exception.hpp"
+#include "instrument/file.hpp"
+#include "instrument/filter.hpp"
+#include "instrument/list.hpp"
+#include "instrument/node.hpp"
+#include "instrument/object.hpp"
+#include "instrument/parser.hpp"
+#include "instrument/plugin.hpp"
+#include "instrument/process.hpp"
+#include "instrument/stack.hpp"
+#include "instrument/stream.hpp"
+#include "instrument/string.hpp"
+#include "instrument/stty.hpp"
+#include "instrument/style.hpp"
+#include "instrument/symbol.hpp"
+#include "instrument/symtab.hpp"
+#include "instrument/tcp_socket.hpp"
+#include "instrument/thread.hpp"
+#include "instrument/tracer.hpp"
+#include "instrument/util.hpp"
+
+#endif
