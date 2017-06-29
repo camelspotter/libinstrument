@@ -1,6 +1,8 @@
 #ifndef _INSTRUMENT
 #define _INSTRUMENT 1
 
+#cmakedefine TST
+
 #define _REENTRANT
 #define WITH_COLOR_ASSERTIONS
 #define WITH_COLOR_TERM

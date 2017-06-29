@@ -9,7 +9,7 @@ SET(${PROJECT_NAME}_VERSION_MAJOR 1)
 
 SET(${PROJECT_NAME}_VERSION_MINOR 0)
 
-SET(CMAKE_INSTALL_PREFIX	/usr/local)
+SET(CMAKE_INSTALL_PREFIX /usr/local)
 
 
 # Source and header files listings
@@ -17,6 +17,8 @@ SET(CMAKE_INSTALL_PREFIX	/usr/local)
 SET(SRC_ROOT src)
 
 SET(HDR_ROOT include)
+
+SET(HDR_IN_ROOT ${HDR_ROOT}.in)
 
 SET(SOURCES
 	${SRC_ROOT}/call.cpp
@@ -86,20 +88,22 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 # Fixed -D options
 
 TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC
-	-D_REENTRANT							# thread safety
-	-DWITH_COLOR_ASSERTIONS		# color-coded assertions
-	-DWITH_COLOR_TERM					# support color terminals (VT100)
-	-DWITH_DEBUG							# include debugging code
-	-DWITH_FILTER							# support instrumentation filters
-	-DWITH_HIGHLIGHT					# support C++ trace syntax highlighting
-	-DWITH_PLUGIN							# support instrumentation plugins
-	-DWITH_STREAM							# support buffered output streams
-	-DWITH_UNRESOLVED					# print unresolved symbols in traces
+	_REENTRANT							# thread safety
+	WITH_COLOR_ASSERTIONS		# color-coded assertions
+	WITH_COLOR_TERM					# support color terminals (VT100)
+	WITH_DEBUG							# include debugging code
+	WITH_FILTER							# support instrumentation filters
+	WITH_HIGHLIGHT					# support C++ trace syntax highlighting
+	WITH_PLUGIN							# support instrumentation plugins
+	WITH_STREAM							# support buffered output streams
+	WITH_UNRESOLVED					# print unresolved symbols in traces
+)
 
-	-DWITH_SYMBOL_ENUMERATION
-	-DWITH_STREAM_FILE
-	-DWITH_STREAM_STTY
-	-DWITH_STREAM_TCP
+TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC
+	WITH_SYMBOL_ENUMERATION
+	WITH_STREAM_FILE
+	WITH_STREAM_STTY
+	WITH_STREAM_TCP
 )
 
 
@@ -149,19 +153,37 @@ TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
 )
 
 
+# Configuration rules
+
+get_target_property(DEFS ${PROJECT_NAME} COMPILE_DEFINITIONS)
+foreach(DEF ${DEFS})
+	MESSAGE("#define " ${DEF})
+endforeach(DEF)
+
+if(WITH_COLOR_ASSERTIONS IN_LIST DEFS)
+	MESSAGE("DEFINED___________________2")
+endif(WITH_COLOR_ASSERTIONS IN_LIST DEFS)
+
+IF(DEFINED DEFS)
+	MESSAGE("DEFINED___________________")
+endif(DEFINED DEFS)
+
+SET(TST "1")
+CONFIGURE_FILE(${HDR_IN_ROOT}/instrument.hpp.in ${HDR_IN_ROOT}/instrument.hpp)
+
+
 # Installation rules
 
 INSTALL(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
 
 INSTALL(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 
-install(PROGRAMS extra/vtcolors DESTINATION bin)
+INSTALL(PROGRAMS extra/vtcolors DESTINATION bin)
 
-install(FILES extra/extensions.dict extra/keywords.dict extra/types.dict DESTINATION etc)
+INSTALL(FILES extra/extensions.dict extra/keywords.dict extra/types.dict DESTINATION etc)
+
+INSTALL(FILES ${PROJECT_BINARY_DIR}/${HDR_IN_ROOT}/instrument.hpp DESTINATION include)
 
 
-GET_PROPERTY(DEFS TARGET ${PROJECT_NAME} PROPERTY COMPILE_DEFINITIONS)
-MESSAGE(STATUS "Definitions " ${DEFS})
-
-GET_PROPERTY(FLAGS TARGET ${PROJECT_NAME} PROPERTY COMPILE_OPTIONS)
-MESSAGE(STATUS "Flags " ${FLAGS})
+#GET_PROPERTY(FLAGS TARGET ${PROJECT_NAME} PROPERTY COMPILE_OPTIONS)
+#MESSAGE(STATUS "Flags " ${FLAGS})
