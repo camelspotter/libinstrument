@@ -11,7 +11,9 @@ SET(${PROJECT_NAME}_VERSION_MINOR 0)
 
 SET(CMAKE_INSTALL_PREFIX /usr/local)
 
-
+IF(LINUX) 
+  OPTION(_REENTRANT) 
+	
 # Source and header files listings
 
 SET(SRC_ROOT src)
