@@ -1,13 +1,6 @@
 #ifndef _INSTRUMENT
 #define _INSTRUMENT 1
 
-/*
-get_target_property(DEFS ${PROJECT_NAME} COMPILE_DEFINITIONS)
-foreach(DEF ${DEFS})
-	MESSAGE("#define " ${DEF})
-endforeach(DEF)
-*/
-
 #cmakedefine _REENTRANT
 #cmakedefine WITH_COLOR_ASSERTIONS
 #cmakedefine WITH_COLOR_TERM

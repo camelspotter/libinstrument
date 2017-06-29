@@ -142,28 +142,69 @@ SET(HEADERS
 	${HDR_ROOT}/config/config_headers.hpp
 	${HDR_ROOT}/config/config_macros.hpp
 	${HDR_ROOT}/config/config_types.hpp
-	${HDR_ROOT}/dictionary.hpp
 	${HDR_ROOT}/exception.hpp
-	${HDR_ROOT}/file.hpp
-	${HDR_ROOT}/filter.hpp
 	${HDR_ROOT}/list.hpp
 	${HDR_ROOT}/node.hpp
 	${HDR_ROOT}/object.hpp
-	${HDR_ROOT}/parser.hpp
-	${HDR_ROOT}/plugin.hpp
 	${HDR_ROOT}/process.hpp
 	${HDR_ROOT}/stack.hpp
-	${HDR_ROOT}/stream.hpp
 	${HDR_ROOT}/string.hpp
-	${HDR_ROOT}/stty.hpp
-	${HDR_ROOT}/style.hpp
 	${HDR_ROOT}/symbol.hpp
 	${HDR_ROOT}/symtab.hpp
-	${HDR_ROOT}/tcp_socket.hpp
 	${HDR_ROOT}/thread.hpp
 	${HDR_ROOT}/tracer.hpp
 	${HDR_ROOT}/util.hpp
 )
+
+IF(WITH_FILTER)
+
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/filter.hpp)
+
+ENDIF(WITH_FILTER)
+
+IF(WITH_HIGHLIGHT)
+
+	SET(HEADERS
+			${HEADERS}
+			${HDR_ROOT}/dictionary.hpp
+			${HDR_ROOT}/parser.hpp
+			${HDR_ROOT}/style.hpp
+	)
+
+ENDIF(WITH_HIGHLIGHT)
+
+IF(WITH_PLUGIN)
+
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/plugin.hpp)
+
+ENDIF(WITH_PLUGIN)
+
+IF(WITH_STREAM)
+
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/stream.hpp)
+
+	IF(WITH_STREAM_FILE)
+
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/file.hpp)
+
+	ENDIF(WITH_STREAM_FILE)
+
+	IF(WITH_STREAM_STTY)
+
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/stty.hpp)
+
+	ENDIF(WITH_STREAM_STTY)
+
+	IF(WITH_STREAM_TCP)
+
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/tcp_socket.hpp)
+
+	ENDIF(WITH_STREAM_TCP)
+
+ENDIF(WITH_STREAM)
+
+
+# Target definition
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
 
@@ -172,26 +213,19 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 )
 
 
-# Fixed -D options
+# -D options (defines)
 
-TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC
-	_REENTRANT							#
-	WITH_COLOR_ASSERTIONS		# color-coded assertions
-	WITH_COLOR_TERM					# support color terminals (VT100)
-	WITH_DEBUG							# include debugging code
-	WITH_FILTER							# support instrumentation filters
-	WITH_HIGHLIGHT					# support C++ trace syntax highlighting
-	WITH_PLUGIN							# support instrumentation plugins
-	WITH_STREAM							# support buffered output streams
-	WITH_UNRESOLVED					# print unresolved symbols in traces
-)
+GET_PROPERTY(OPTS DIRECTORY ./ PROPERTY VARIABLES)
 
-TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC
-	WITH_SYMBOL_ENUMERATION
-	WITH_STREAM_FILE
-	WITH_STREAM_STTY
-	WITH_STREAM_TCP
-)
+FOREACH(OPT ${OPTS})
+
+	IF("${OPT}" MATCHES "WITH_" AND ${OPT})
+
+		TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC ${OPT})
+	
+	ENDIF("${OPT}" MATCHES "WITH_" AND ${OPT})
+
+ENDFOREACH(OPT)
 
 
 # -f options
