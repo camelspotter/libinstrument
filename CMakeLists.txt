@@ -11,10 +11,51 @@ SET(${PROJECT_NAME}_VERSION_MINOR 0)
 
 SET(CMAKE_INSTALL_PREFIX /usr/local)
 
-IF(LINUX) 
-  OPTION(_REENTRANT) 
-	
-# Source and header files listings
+
+# Fixed primary option definitions
+
+OPTION(_REENTRANT "thread safety" ON)
+
+OPTION(WITH_COLOR_ASSERTIONS "color-coded assertions" ON)
+
+OPTION(WITH_COLOR_TERM "support color terminals (VT100)" ON)
+
+OPTION(WITH_DEBUG "include debugging code" ON)
+
+OPTION(WITH_UNRESOLVED "print unresolved symbols in traces" ON)
+
+
+# Fixed secondary option definitions
+
+OPTION(WITH_FILTER "support instrumentation filters" ON)
+
+OPTION(WITH_HIGHLIGHT "support C++ trace syntax highlighting" ON)
+
+OPTION(WITH_PLUGIN "support instrumentation plugins" ON)
+
+OPTION(WITH_STREAM "support buffered output streams" ON)
+
+
+# Dynamic option definitions
+
+IF(WITH_DEBUG)
+
+	OPTION(WITH_SYMBOL_ENUMERATION "enumerate loaded symbol tables" ON)
+
+ENDIF(WITH_DEBUG)
+
+IF(WITH_STREAM)
+
+	OPTION(WITH_STREAM_FILE "support buffered file output streams" ON)
+
+	OPTION(WITH_STREAM_STTY "support buffered serial tty output streams" ON)
+
+	OPTION(WITH_STREAM_TCP "support buffered TCP/IP socket output streams" ON)
+
+ENDIF(WITH_STREAM)
+
+
+# Source and header directory listings
 
 SET(SRC_ROOT src)
 
@@ -22,31 +63,75 @@ SET(HDR_ROOT include)
 
 SET(HDR_IN_ROOT ${HDR_ROOT}.in)
 
+
+# Source file listings
+
 SET(SOURCES
 	${SRC_ROOT}/call.cpp
 	${SRC_ROOT}/chain.cpp
-	${SRC_ROOT}/dictionary.cpp
 	${SRC_ROOT}/exception.cpp
-	${SRC_ROOT}/file.cpp
-	${SRC_ROOT}/filter.cpp
 	${SRC_ROOT}/list.cpp
 	${SRC_ROOT}/node.cpp
 	${SRC_ROOT}/object.cpp
-	${SRC_ROOT}/parser.cpp
-	${SRC_ROOT}/plugin.cpp
 	${SRC_ROOT}/process.cpp
 	${SRC_ROOT}/stack.cpp
-	${SRC_ROOT}/stream.cpp
 	${SRC_ROOT}/string.cpp
-	${SRC_ROOT}/stty.cpp
-	${SRC_ROOT}/style.cpp
 	${SRC_ROOT}/symbol.cpp
 	${SRC_ROOT}/symtab.cpp
-	${SRC_ROOT}/tcp_socket.cpp
 	${SRC_ROOT}/thread.cpp
 	${SRC_ROOT}/tracer.cpp
 	${SRC_ROOT}/util.cpp
 )
+
+IF(WITH_FILTER)
+
+	SET(SOURCES ${SOURCES} ${SRC_ROOT}/filter.cpp)
+
+ENDIF(WITH_FILTER)
+
+IF(WITH_HIGHLIGHT)
+
+	SET(SOURCES
+			${SOURCES}
+			${SRC_ROOT}/dictionary.cpp
+			${SRC_ROOT}/parser.cpp
+			${SRC_ROOT}/style.cpp
+	)
+
+ENDIF(WITH_HIGHLIGHT)
+
+IF(WITH_PLUGIN)
+
+	SET(SOURCES ${SOURCES} ${SRC_ROOT}/plugin.cpp)
+
+ENDIF(WITH_PLUGIN)
+
+IF(WITH_STREAM)
+
+	SET(SOURCES ${SOURCES} ${SRC_ROOT}/stream.cpp)
+
+	IF(WITH_STREAM_FILE)
+
+		SET(SOURCES ${SOURCES} ${SRC_ROOT}/file.cpp)
+
+	ENDIF(WITH_STREAM_FILE)
+
+	IF(WITH_STREAM_STTY)
+
+		SET(SOURCES ${SOURCES} ${SRC_ROOT}/stty.cpp)
+
+	ENDIF(WITH_STREAM_STTY)
+
+	IF(WITH_STREAM_TCP)
+
+		SET(SOURCES ${SOURCES} ${SRC_ROOT}/tcp_socket.cpp)
+
+	ENDIF(WITH_STREAM_TCP)
+
+ENDIF(WITH_STREAM)
+
+
+# Header file listings
 
 SET(HEADERS
 	${HDR_ROOT}/call.hpp
@@ -90,7 +175,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
 # Fixed -D options
 
 TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC
-	_REENTRANT							# thread safety
+	_REENTRANT							#
 	WITH_COLOR_ASSERTIONS		# color-coded assertions
 	WITH_COLOR_TERM					# support color terminals (VT100)
 	WITH_DEBUG							# include debugging code
@@ -157,20 +242,6 @@ TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
 
 # Configuration rules
 
-get_target_property(DEFS ${PROJECT_NAME} COMPILE_DEFINITIONS)
-foreach(DEF ${DEFS})
-	MESSAGE("#define " ${DEF})
-endforeach(DEF)
-
-if(WITH_COLOR_ASSERTIONS IN_LIST DEFS)
-	MESSAGE("DEFINED___________________2")
-endif(WITH_COLOR_ASSERTIONS IN_LIST DEFS)
-
-IF(DEFINED DEFS)
-	MESSAGE("DEFINED___________________")
-endif(DEFINED DEFS)
-
-SET(TST "1")
 CONFIGURE_FILE(${HDR_IN_ROOT}/instrument.hpp.in ${HDR_IN_ROOT}/instrument.hpp)
 
 
@@ -185,7 +256,3 @@ INSTALL(PROGRAMS extra/vtcolors DESTINATION bin)
 INSTALL(FILES extra/extensions.dict extra/keywords.dict extra/types.dict DESTINATION etc)
 
 INSTALL(FILES ${PROJECT_BINARY_DIR}/${HDR_IN_ROOT}/instrument.hpp DESTINATION include)
-
-
-#GET_PROPERTY(FLAGS TARGET ${PROJECT_NAME} PROPERTY COMPILE_OPTIONS)
-#MESSAGE(STATUS "Flags " ${FLAGS})
