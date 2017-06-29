@@ -1,6 +1,7 @@
 #ifndef _INSTRUMENT
 #define _INSTRUMENT 1
 
+
 #cmakedefine _REENTRANT
 #cmakedefine WITH_COLOR_ASSERTIONS
 #cmakedefine WITH_COLOR_TERM
@@ -19,28 +20,55 @@
 
 
 #include "instrument/config.hpp"
+
 #include "instrument/call.hpp"
 #include "instrument/chain.hpp"
-#include "instrument/dictionary.hpp"
 #include "instrument/exception.hpp"
-#include "instrument/file.hpp"
-#include "instrument/filter.hpp"
 #include "instrument/list.hpp"
 #include "instrument/node.hpp"
 #include "instrument/object.hpp"
-#include "instrument/parser.hpp"
-#include "instrument/plugin.hpp"
 #include "instrument/process.hpp"
 #include "instrument/stack.hpp"
-#include "instrument/stream.hpp"
 #include "instrument/string.hpp"
-#include "instrument/stty.hpp"
-#include "instrument/style.hpp"
 #include "instrument/symbol.hpp"
 #include "instrument/symtab.hpp"
-#include "instrument/tcp_socket.hpp"
 #include "instrument/thread.hpp"
 #include "instrument/tracer.hpp"
 #include "instrument/util.hpp"
+
+
+#ifdef WITH_FILTER
+#include "instrument/filter.hpp"
+#endif
+
+
+#ifdef WITH_HIGHLIGHT
+#include "instrument/dictionary.hpp"
+#include "instrument/parser.hpp"
+#include "instrument/style.hpp"
+#endif
+
+
+#ifdef WITH_PLUGIN
+#include "instrument/plugin.hpp"
+#endif
+
+
+#ifdef WITH_STREAM
+#include "instrument/stream.hpp"
+
+#ifdef WITH_STREAM_FILE
+#include "instrument/file.hpp"
+#endif
+
+#ifdef WITH_STREAM_STTY
+#include "instrument/stty.hpp"
+#endif
+
+#ifdef WITH_STREAM_TCP
+#include "instrument/tcp_socket.hpp"
+#endif
+
+#endif
 
 #endif
