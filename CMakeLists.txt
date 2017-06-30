@@ -1,5 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.8)
 
+INCLUDE(include.cmake/util.cmake)
+
 
 # Project definition
 
@@ -287,6 +289,8 @@ INSTALL(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 
 INSTALL(PROGRAMS extra/vtcolors DESTINATION bin)
 
-INSTALL(FILES extra/extensions.dict extra/keywords.dict extra/types.dict DESTINATION etc)
-
 INSTALL(FILES ${PROJECT_BINARY_DIR}/${HDR_IN_ROOT}/instrument.hpp DESTINATION include)
+
+LIST_FILES(extra/*.dict DICTIONARIES)
+
+INSTALL(FILES ${DICTIONARIES} DESTINATION etc)
