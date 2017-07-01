@@ -33,7 +33,7 @@ static const i8 g_libs_env[] = "INSTRUMENT_LIBS";
 /**
 	@brief Library version major
 */
-static const u16 g_major = 1;
+static const u16 g_major = ${${PROJECT_NAME}_VERSION_MAJOR};
 
 /**
 	@brief Block size (allocation alignment)
@@ -45,7 +45,7 @@ static const u16 g_memblock_sz = 64;
 /**
 	@brief Library version minor
 */
-static const u16 g_minor = 0;
+static const u16 g_minor = ${${PROJECT_NAME}_VERSION_MINOR};
 
 /**
 	@brief Preallocation block size
@@ -57,7 +57,7 @@ static const u16 g_prealloc_sz = 128;
 /**
 	@brief Library installation prefix
 */
-static const i8 g_prefix[] = "/usr/local";
+static const i8 g_prefix[] = "@CMAKE_INSTALL_PREFIX@";
 
 
 /*

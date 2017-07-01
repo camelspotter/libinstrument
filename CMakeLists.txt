@@ -278,6 +278,8 @@ TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
 
 # Configuration rules
 
+CONFIGURE_FILE(${HDR_IN_ROOT}/config_globals.hpp.in ${PROJECT_SOURCE_DIR}/${HDR_ROOT}/config/config_globals.hpp)
+
 CONFIGURE_FILE(${HDR_IN_ROOT}/instrument.hpp.in ${HDR_IN_ROOT}/instrument.hpp)
 
 
@@ -290,6 +292,7 @@ INSTALL(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 INSTALL(PROGRAMS extra/vtcolors DESTINATION bin)
 
 INSTALL(FILES ${PROJECT_BINARY_DIR}/${HDR_IN_ROOT}/instrument.hpp DESTINATION include)
+
 
 LIST_FILES(extra/*.dict DICTIONARIES)
 
