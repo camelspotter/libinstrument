@@ -2,6 +2,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.8)
 
 INCLUDE(include.cmake/util.cmake)
 
+INCLUDE(include.cmake/eclipse.cmake)
+
 
 # Project definition
 
@@ -11,7 +13,18 @@ SET(${PROJECT_NAME}_VERSION_MAJOR 1)
 
 SET(${PROJECT_NAME}_VERSION_MINOR 0)
 
-SET(CMAKE_INSTALL_PREFIX /usr/local)
+SET(CMAKE_INSTALL_PREFIX /usr/local CACHE PATH "installation prefix" FORCE)
+
+
+# Environment variables
+
+SET(CMAKE_C_COMPILER /usr/bin/gcc CACHE FILEPATH "C compiler" FORCE)
+
+SET(CMAKE_CXX_COMPILER /usr/bin/g++ CACHE FILEPATH "C++ compiler" FORCE)
+
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "compiler invocations" FORCE)
+
+SET(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "make output enable" FORCE)
 
 
 # Fixed primary option definitions
