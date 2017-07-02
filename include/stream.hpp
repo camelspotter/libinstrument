@@ -31,7 +31,7 @@ namespace instrument {
 
 	@see
 		<a href="index.html#sec5_4">
-			<b>5.4 LDP (Libinstrument Debug Protocol)</b>
+			<b>5.4 IDP (Instrumentation Data Protocol)</b>
 		</a>
 	@see <a href="index.html#sec5_5"><b>5.5 Buffered output streams</b></a>
 

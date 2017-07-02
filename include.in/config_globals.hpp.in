@@ -83,9 +83,9 @@ static const i8 g_trace_syntax[] = "[ \t\n\r\\{\\}\\(\\)\\*&,:<>]+";
 #ifdef WITH_STREAM_TCP
 
 /**
-	@brief LDP service port
+	@brief IDP (Instrumentation Data Protocol) service port
 */
-static const i32 g_ldp_port = 4242;
+static const i32 g_idp_port = 4242;
 
 #endif
 

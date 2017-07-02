@@ -179,7 +179,7 @@ stream& stream::flush()
 
 /**
  * @brief
- *	Append <a href="index.html#sec5_4"><b>LDP</b></a> headers to the buffer
+ *	Append <a href="index.html#sec5_4"><b>IDP</b></a> headers to the buffer
  *
  * @returns *this
  *
@@ -195,7 +195,7 @@ stream& stream::flush()
  *		<li>timestamp (in microseconds)
  *	</ol><br>
  *	Each header is formatted as 'name: value\\r\\n'. All the numeric values are
- *	hexadecimal. In LDP, the header section is terminated with a double \\r\\n
+ *	hexadecimal. In IDP, the header section is terminated with a double \\r\\n
  *	followed by the message body (trace data). This method just appends the four
  *	headers (not the extra \\r\\n delimiter) to allow for custom headers before
  *	the trace data (exception headers, custom user headers e.t.c)

@@ -15,14 +15,14 @@ namespace instrument {
 	@brief A buffered TCP/IP socket output stream
 
 	A tcp_socket object is a buffered TCP/IP client socket, designed specifically
-	to implement the client side of LDP, or any other unidirectional application
+	to implement the client side of IDP, or any other unidirectional application
 	protocol (write only). The class currently supports only IPv4 addresses. This
 	class is not thread safe, the caller must implement thread synchronization,
 	nevertheless basic stream locking is inherited from instrument::stream
 
 	@see
 		<a href="index.html#sec5_4">
-			<b>5.4 LDP (Libinstrument Debug Protocol)</b>
+			<b>5.4 IDP (Instrumentation Data Protocol)</b>
 		</a>
 	@see
 		<a href="index.html#sec5_5_2">
@@ -51,7 +51,7 @@ public:
 
 	/* Constructors, copy constructors and destructor */
 
-	explicit tcp_socket(const i8*, i32 = g_ldp_port);
+	explicit tcp_socket(const i8*, i32 = g_idp_port);
 
 	tcp_socket(const tcp_socket&);
 

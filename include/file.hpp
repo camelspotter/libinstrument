@@ -14,7 +14,7 @@ namespace instrument {
 /**
 	@brief A buffered file output stream
 
-	A file object is a buffered output stream used to output LDP and generic data
+	A file object is a buffered output stream used to output IDP and generic data
 	to a file. Based on the unique identifiers of the instrumented process, a file
 	object can assign file names in an unambiguous way. This class is not thread
 	safe, the caller must implement thread synchronization, nevertheless basic
@@ -24,7 +24,7 @@ namespace instrument {
 
 	@see
 		<a href="index.html#sec5_4">
-			<b>5.4 LDP (Libinstrument Debug Protocol)</b>
+			<b>5.4 IDP (Instrumentation Data Protocol)</b>
 		</a>
 	@see <a href="index.html#sec5_5_1"><b>5.5.1 Using instrument::file</b></a>
 

@@ -283,7 +283,7 @@ tcp_socket& tcp_socket::set_option(i32 nm, const void *val, u32 sz)
  * @returns *this
  *
  * @note
- *	If the object implements LDP, that is a unidirectional protocol, the read
+ *	If the object implements IDP, that is a unidirectional protocol, the read
  *	channel can be shutdown right after connection establishment
  */
 inline tcp_socket& tcp_socket::shutdown(i32 ch) const

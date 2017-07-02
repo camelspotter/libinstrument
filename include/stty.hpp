@@ -17,7 +17,7 @@ namespace instrument {
 /**
 	@brief A buffered output stream for serial interfaces
 
-	An stty object is a buffered output stream used to output LDP or generic data
+	An stty object is a buffered output stream used to output IDP or generic data
 	to any type of serial interface. The interfaces are configured for 8N1
 	transmition, the baud rate is configurable (throughout a session). The class
 	is not thread safe, the caller must implement thread synchronization. Basic
@@ -25,7 +25,7 @@ namespace instrument {
 
 	@see
 		<a href="index.html#sec5_4">
-			<b>5.4 LDP (Libinstrument Debug Protocol)</b>
+			<b>5.4 IDP (Instrumentation Data Protocol)</b>
 		</a>
 	@see <a href="index.html#sec5_5_3"><b>5.5.3 Using instrument::stty</b></a>
 */
