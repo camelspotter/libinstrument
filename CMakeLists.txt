@@ -5,17 +5,6 @@ INCLUDE(include.cmake/util.cmake)
 INCLUDE(include.cmake/eclipse.cmake)
 
 
-# Project definition
-
-PROJECT(instrument C CXX)
-
-SET(${PROJECT_NAME}_VERSION_MAJOR 1)
-
-SET(${PROJECT_NAME}_VERSION_MINOR 0)
-
-SET(CMAKE_INSTALL_PREFIX /usr/local CACHE PATH "installation prefix" FORCE)
-
-
 # Environment variables
 
 SET(CMAKE_C_COMPILER /usr/bin/gcc CACHE FILEPATH "C compiler" FORCE)
@@ -25,6 +14,23 @@ SET(CMAKE_CXX_COMPILER /usr/bin/g++ CACHE FILEPATH "C++ compiler" FORCE)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "compiler invocations" FORCE)
 
 SET(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "make output enable" FORCE)
+
+
+# Project definition
+
+PROJECT(instrument C CXX)
+
+DESCRIBE_HOST()
+
+DESCRIBE_TARGET()
+
+IS_SUPPORTED()
+
+SET(${PROJECT_NAME}_VERSION_MAJOR 1)
+
+SET(${PROJECT_NAME}_VERSION_MINOR 0)
+
+SET(CMAKE_INSTALL_PREFIX /usr/local CACHE PATH "installation prefix" FORCE)
 
 
 # Fixed primary option definitions
@@ -310,3 +316,8 @@ INSTALL(FILES ${PROJECT_BINARY_DIR}/${HDR_IN_ROOT}/instrument.hpp DESTINATION in
 LIST_FILES(extra/*.dict DICTIONARIES)
 
 INSTALL(FILES ${DICTIONARIES} DESTINATION etc)
+
+
+# Store final variable set
+
+LIST_VARIABLES(${PROJECT_BINARY_DIR}/${PROJECT_NAME}_variables.txt)
