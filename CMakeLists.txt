@@ -321,3 +321,13 @@ INSTALL(FILES ${DICTIONARIES} DESTINATION etc)
 # Store final variable set
 
 LIST_VARIABLES(${PROJECT_BINARY_DIR}/${PROJECT_NAME}_variables.txt)
+
+
+# Install back in sources the installation manifests
+
+INSTALL(FILES ${PROJECT_BINARY_DIR}/compile_commands.json DESTINATION ${PROJECT_SOURCE_DIR}/doc/)
+
+# todo post-install
+# INSTALL(FILES ${PROJECT_BINARY_DIR}/install_manifest.txt DESTINATION ${PROJECT_SOURCE_DIR}/doc/)
+
+INSTALL(FILES ${PROJECT_BINARY_DIR}/instrument_variables.txt DESTINATION ${PROJECT_SOURCE_DIR}/doc/)
