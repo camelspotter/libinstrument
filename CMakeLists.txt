@@ -63,6 +63,8 @@ IF(WITH_DEBUG)
 
 	OPTION(WITH_SYMBOL_ENUMERATION "enumerate loaded symbol tables" ON)
 
+	SET(WITH_DEBUG_LEVEL DBGL_HIGH)
+
 ENDIF(WITH_DEBUG)
 
 IF(WITH_STREAM)
@@ -89,18 +91,31 @@ SET(HDR_IN_ROOT ${HDR_ROOT}.in)
 
 SET(SOURCES
 	${SRC_ROOT}/call.cpp
+
 	${SRC_ROOT}/chain.cpp
+
 	${SRC_ROOT}/exception.cpp
+
 	${SRC_ROOT}/list.cpp
+
 	${SRC_ROOT}/node.cpp
+
 	${SRC_ROOT}/object.cpp
+
 	${SRC_ROOT}/process.cpp
+
 	${SRC_ROOT}/stack.cpp
+
 	${SRC_ROOT}/string.cpp
+
 	${SRC_ROOT}/symbol.cpp
+
 	${SRC_ROOT}/symtab.cpp
+
 	${SRC_ROOT}/thread.cpp
+
 	${SRC_ROOT}/tracer.cpp
+
 	${SRC_ROOT}/util.cpp
 )
 
@@ -114,8 +129,11 @@ IF(WITH_HIGHLIGHT)
 
 	SET(SOURCES
 			${SOURCES}
+
 			${SRC_ROOT}/dictionary.cpp
+
 			${SRC_ROOT}/parser.cpp
+
 			${SRC_ROOT}/style.cpp
 	)
 
@@ -156,24 +174,43 @@ ENDIF(WITH_STREAM)
 
 SET(HEADERS
 	${HDR_ROOT}/call.hpp
+
 	${HDR_ROOT}/chain.hpp
+
 	${HDR_ROOT}/config.hpp
+
 	${HDR_ROOT}/config/config_definitions.hpp
+
 	${HDR_ROOT}/config/config_globals.hpp
+
 	${HDR_ROOT}/config/config_headers.hpp
+
 	${HDR_ROOT}/config/config_macros.hpp
+
 	${HDR_ROOT}/config/config_types.hpp
+
 	${HDR_ROOT}/exception.hpp
+
 	${HDR_ROOT}/list.hpp
+
 	${HDR_ROOT}/node.hpp
+
 	${HDR_ROOT}/object.hpp
+
 	${HDR_ROOT}/process.hpp
+
 	${HDR_ROOT}/stack.hpp
+
 	${HDR_ROOT}/string.hpp
+
 	${HDR_ROOT}/symbol.hpp
+
 	${HDR_ROOT}/symtab.hpp
+
 	${HDR_ROOT}/thread.hpp
+
 	${HDR_ROOT}/tracer.hpp
+
 	${HDR_ROOT}/util.hpp
 )
 
@@ -187,8 +224,11 @@ IF(WITH_HIGHLIGHT)
 
 	SET(HEADERS
 			${HEADERS}
+
 			${HDR_ROOT}/dictionary.hpp
+
 			${HDR_ROOT}/parser.hpp
+
 			${HDR_ROOT}/style.hpp
 	)
 
@@ -253,7 +293,7 @@ ENDFOREACH(OPT)
 
 TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
 	-fno-enforce-eh-specs
-	-fPIC
+
 	-fstrict-aliasing
 )
 
@@ -262,8 +302,11 @@ TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
 
 TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
 	-O2
+
 	-march=native
+
 	-rdynamic
+
 	-std=gnu++0x
 )
 
@@ -272,30 +315,52 @@ TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
 
 TARGET_COMPILE_OPTIONS(${PROJECT_NAME} PUBLIC
 	-Wall
+
 	-Wabi
+
 	-Wcast-align
+
 	-Wcast-qual
+
 	-Wclobbered
+
 	-Wctor-dtor-privacy
+
 	-Wdisabled-optimization
+
 	-Wempty-body
+
 	-Wformat-security
+
 	-Winit-self
+
 	-Wlogical-op
+
 	-Wmissing-field-initializers
+
 	-Wmissing-include-dirs
+
 	-Wmissing-noreturn
+
 	-Wnon-virtual-dtor
+
 	-Woverlength-strings
+
 	-Wpacked
+
 	-Wredundant-decls
+
 	-Wsign-compare
+
 	-Wswitch-enum
+
 	-Wtype-limits
 )
 
 
 # Configuration rules
+
+CONFIGURE_FILE(${HDR_IN_ROOT}/config_definitions.hpp.in ${PROJECT_SOURCE_DIR}/${HDR_ROOT}/config/config_definitions.hpp)
 
 CONFIGURE_FILE(${HDR_IN_ROOT}/config_globals.hpp.in ${PROJECT_SOURCE_DIR}/${HDR_ROOT}/config/config_globals.hpp)
 
