@@ -39,7 +39,7 @@ OPTION(_REENTRANT "thread safety" ON)
 
 OPTION(WITH_COLOR_ASSERTIONS "color-coded assertions" ON)
 
-OPTION(WITH_COLOR_TERM "support color terminals (VT100)" ON)
+OPTION(WITH_COLOR_TERM "support color terminals (VT100)" OFF)
 
 OPTION(WITH_DEBUG "include debugging code" ON)
 
