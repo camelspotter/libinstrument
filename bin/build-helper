@@ -1,0 +1,63 @@
+#!/bin/bash
+
+cmake=/usr/local/cmake-3.8.2/bin/cmake
+
+echo="echo -e"
+
+rm="rm -rf"
+
+
+# Show script usage message and exit
+usage()
+{
+	name=`basename $0`
+
+	$echo "Build helper for CMake generated, libinstrument build system"
+	$echo "Usage: $name [-c] [-h]\r\n"
+
+	$echo "'$name' installs the libinstrument package."
+	$echo "The following options change the default behaviour:\r\n"
+
+	$echo "-c  Make a clean build"
+	$echo "-h  Show this message"
+	exit 1
+}
+
+
+# Flag controlled by the -c option
+do_clear=0
+
+
+# Parse command line arguments
+for opt in "$@" ;
+do
+	if [ "$opt" == "-c" ];
+	then
+		let do_clear=1
+
+	else
+		usage
+	fi
+done
+
+
+# Clear the build directory
+if [ $do_clear -eq 1 ];
+then
+	$rm *
+	retval=$?
+
+	if [ $retval -ne 0 ];
+	then
+		exit $retval
+	fi
+fi
+
+
+# Build
+$cmake ../libinstrument-1.0/
+make
+make install
+
+exit $?
+

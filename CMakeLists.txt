@@ -13,7 +13,7 @@ SET(CMAKE_CXX_COMPILER /usr/bin/g++ CACHE FILEPATH "C++ compiler" FORCE)
 
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "compiler invocations" FORCE)
 
-SET(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "make output enable" FORCE)
+SET(CMAKE_VERBOSE_MAKEFILE OFF CACHE BOOL "make output enable" FORCE)
 
 
 # Project definition

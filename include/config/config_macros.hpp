@@ -30,47 +30,36 @@
 
 
 /*
-	Debug assertions
+	Debug assertions (with optional color coding)
 */
+
+#ifdef WITH_COLOR_ASSERTIONS
+#define ASSERT_COLOR_DEF		"\e[1m\e[38;5;9m"
+#define ASSERT_COLOR_UNDEF	"\e[0m"
+#else
+#define ASSERT_COLOR_DEF		""
+#define ASSERT_COLOR_UNDEF	""
+#endif	
 
 #ifdef WITH_DEBUG
 
 /**
 	@brief Assertion macro
 */
-#define __ASSERT(x)																						\
+#define __D_ASSERT(x)																					\
 if (!(x)) {																										\
+	std::cerr << ASSERT_COLOR_DEF;															\
 	std::cerr << "\r\nassertion '" << #x << "' failed";				\
 	std::cerr << "\r\non line " << std::dec << __LINE__;				\
 	std::cerr << "\r\nin file '" << __FILE__ << "'";						\
 	std::cerr << "\r\nin function " << __PRETTY_FUNCTION__;		\
 	std::cerr << "\r\n\r\n";																		\
+	std::cerr << ASSERT_COLOR_UNDEF;														\
 }
 
 #else
 
-#define __ASSERT(x)
-
-#endif
-
-
-/*
-	Color coded assertions
-*/
-
-#ifdef WITH_COLOR_ASSERTIONS
-
-/**
-	@brief Color coded assertion macro
-*/
-#define __D_ASSERT(x)																					\
-	std::cerr << "\e[1m\e[38;5;9m";															\
-	__ASSERT(x);																								\
-	std::cerr << "\e[0m"
-
-#else
-
-#define __D_ASSERT(x)				__ASSERT(x)
+#define __D_ASSERT(x)
 
 #endif
 
