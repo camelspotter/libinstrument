@@ -41,7 +41,7 @@ OPTION(WITH_COLOR_ASSERTIONS "color-coded assertions" ON)
 
 OPTION(WITH_COLOR_TERM "support color terminals (VT100)" OFF)
 
-OPTION(WITH_DEBUG "include debugging code" ON)
+OPTION(WITH_DEBUG "include debugging code" OFF)
 
 OPTION(WITH_UNRESOLVED "print unresolved symbols in traces" ON)
 

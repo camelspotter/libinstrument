@@ -74,7 +74,7 @@ namespace instrument {
 /**
 	@brief Selected debug level
 */
-#define DBG_LEVEL			DBGL_HIGH
+#define DBG_LEVEL			
 
 #endif
 
