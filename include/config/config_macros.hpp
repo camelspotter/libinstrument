@@ -63,11 +63,17 @@ if (!(x)) {													\
 						<< std::endl						\
 						<< "on line "						\
 						<< std::dec							\
-						<< __LINE__;						\
-	std::cerr << "\r\nin file '" << __FILE__ << "'";						\
-	std::cerr << "\r\nin function " << __PRETTY_FUNCTION__;		\
-	std::cerr << "\r\n\r\n";																		\
-	std::cerr << ASSERT_COLOR_UNDEF;														\
+						<< __LINE__							\
+						<< std::endl						\
+						<< "in file '"					\
+						<< __FILE__							\
+						<< "'"									\
+						<< std::endl						\
+						<< "in function "				\
+						<< __PRETTY_FUNCTION__	\
+						<< std::endl						\
+						<< std::endl						\
+						<< ASSERT_COLOR_UNDEF;	\
 }
 
 #else

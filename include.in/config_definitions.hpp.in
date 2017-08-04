@@ -132,7 +132,7 @@ namespace instrument {
 /**
 	@brief Highlighter color for C++ files
 */
-#define HLT_FILE_FG					250
+#define HLT_FILE_FG					13
 
 /**
 	@brief Highlighter color for C++ ABI scopes
