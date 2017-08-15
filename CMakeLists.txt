@@ -13,7 +13,7 @@ SET(CMAKE_CXX_COMPILER /usr/bin/g++ CACHE FILEPATH "C++ compiler" FORCE)
 
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE BOOL "compiler invocations" FORCE)
 
-SET(CMAKE_VERBOSE_MAKEFILE OFF CACHE BOOL "make output enable" FORCE)
+SET(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "make output enable" FORCE)
 
 
 # Project definition
@@ -104,6 +104,8 @@ SET(SOURCES
 
 	${SRC_ROOT}/process.cpp
 
+	${SRC_ROOT}/property.cpp
+	
 	${SRC_ROOT}/stack.cpp
 
 	${SRC_ROOT}/string.cpp
@@ -173,11 +175,11 @@ ENDIF(WITH_STREAM)
 # Header file listings
 
 SET(HEADERS
-	${HDR_ROOT}/call.hpp
+	${HDR_ROOT}/call.hpp													# ok
 
-	${HDR_ROOT}/chain.hpp
+	${HDR_ROOT}/chain.hpp													# ok
 
-	${HDR_ROOT}/config.hpp
+	${HDR_ROOT}/config.hpp												# ok
 
 	${HDR_ROOT}/config/config_definitions.hpp
 
@@ -189,21 +191,23 @@ SET(HEADERS
 
 	${HDR_ROOT}/config/config_types.hpp
 
-	${HDR_ROOT}/exception.hpp
+	${HDR_ROOT}/exception.hpp											# ok
 
 	${HDR_ROOT}/list.hpp
 
-	${HDR_ROOT}/node.hpp
+	${HDR_ROOT}/node.hpp													# ok
 
-	${HDR_ROOT}/object.hpp
+	${HDR_ROOT}/object.hpp												# ok
 
 	${HDR_ROOT}/process.hpp
 
-	${HDR_ROOT}/stack.hpp
+	${HDR_ROOT}/property.hpp
+	
+	${HDR_ROOT}/stack.hpp													# ok
 
 	${HDR_ROOT}/string.hpp
 
-	${HDR_ROOT}/symbol.hpp
+	${HDR_ROOT}/symbol.hpp												# ok
 
 	${HDR_ROOT}/symtab.hpp
 

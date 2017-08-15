@@ -15,8 +15,8 @@
 }
 
 .tablist {
-	margin: 0;
-	padding: 0;
+	margin: 0px;
+	padding: 0px;
 	display: table;
 }
 
@@ -30,7 +30,7 @@
 
 .tablist a {
 	display: block;
-	padding: 0 20px;
+	padding: 0px 20px;
 	font-weight: bold;
 	background-image: url('tab_s.png');
 	background-repeat: no-repeat;
@@ -42,7 +42,7 @@
 }
 
 .tabs3 .tablist a {
-	padding: 0 10px;
+	padding: 0px 10px;
 }
 
 .tablist a:hover {

@@ -1,3 +1,9 @@
+std::ostream
+std::exception
+std::endl
+std::nothrow
+
+
 #include <dlfcn.h> {
 	RTLD_LOCAL
 	RTLD_LAZY
@@ -177,10 +183,10 @@
 
 
 #include <cstdarg> {
-	va_list
+va_list
 	va_end()
 	va_copy()
-	va_start()
+va_start()
 	vsnprintf()
 	vsprintf()
 }
@@ -188,8 +194,8 @@
 
 #include <cstring> {
 	strerror()
-	strlen()
-	strcpy()
+strlen()
+strcpy()
 	strncpy()
 	strcmp()
 	strcasecmp()

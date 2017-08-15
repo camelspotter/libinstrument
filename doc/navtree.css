@@ -1,5 +1,5 @@
 #nav-tree .children_ul {
-	margin: 0;
+	margin: 0px;
 	padding: 4px;
 }
 
@@ -81,7 +81,7 @@
 }
 
 #side-nav {
-	padding: 0 6px 0 0;
+	padding: 0px 6px 0px 0px;
 	margin: 0px;
 	display: block;
 	position: absolute;
@@ -97,8 +97,8 @@
 	background: url("ftv2splitbar.png") repeat scroll right center transparent;
 	cursor: e-resize;
 	height: 100%;
-	right: 0;
-	top: 0;
+	right: 0px;
+	top: 0px;
 	width: 6px;
 }
 

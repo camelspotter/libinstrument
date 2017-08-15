@@ -1,0 +1,5 @@
+Study and finalize license
+
+- Consider adding equals, hashcode, to_string, serialize to object
+
+- Consider inter-chain methods (join, intersect, add)

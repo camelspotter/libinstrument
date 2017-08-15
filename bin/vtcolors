@@ -20,10 +20,10 @@ usage()
 	name=`basename $0`
 
 	$echo "VT100 color palette"
-	$echo "Usage: $name [-b] [-h]\r\n"
+	$echo "Usage: $name [-b] [-h]\n"
 
 	$echo "'$name' prints all available VT100 terminal foreground (text) colors."
-	$echo "The following options change the default behaviour:\r\n"
+	$echo "The following options change the default behaviour:\n"
 
 	$echo "-b  Print background colors"
 	$echo "-h  Show this message"
@@ -64,4 +64,5 @@ do
 		$echo
 	fi
 done
+
 exit 0

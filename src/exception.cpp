@@ -25,7 +25,8 @@ std::ostream& operator<<(std::ostream &lval, const std::exception &rval)
 	util::lock();
 	util::header(lval, EXCEPTION_TAG);
 
-	lval << rval.what() << "\r\n";
+	lval	<< rval.what()
+				<< std::endl;
 
 	util::unlock();
 	return lval;
@@ -47,10 +48,12 @@ std::ostream& operator<<(std::ostream &lval, const exception &rval)
 	util::header(lval, EXCEPTION_TAG);
 
 	if ( likely(rval.m_msg != NULL) ) {
-		lval << rval.m_msg << "\r\n";
+		lval	<< rval.m_msg
+					<< std::endl;
 	}
 	else {
-		lval << "n/a\r\n";
+		lval	<< "n/a"
+					<< std::endl;
 	}
 
 	util::unlock();

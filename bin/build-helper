@@ -1,10 +1,12 @@
 #!/bin/bash
 
-cmake=/usr/local/cmake-3.8.2/bin/cmake
+cmake="/usr/local/cmake-3.8.2/bin/cmake"
 
 echo="echo -e"
 
 rm="rm -rf"
+
+target="../libinstrument-1.0"
 
 
 # Show script usage message and exit
@@ -13,10 +15,10 @@ usage()
 	name=`basename $0`
 
 	$echo "Build helper for CMake generated, libinstrument build system"
-	$echo "Usage: $name [-c] [-h]\r\n"
+	$echo "Usage: $name [-c] [-h]\n"
 
 	$echo "'$name' installs the libinstrument package."
-	$echo "The following options change the default behaviour:\r\n"
+	$echo "The following options change the default behaviour:\n"
 
 	$echo "-c  Make a clean build"
 	$echo "-h  Show this message"
@@ -54,10 +56,24 @@ then
 fi
 
 
+# Generate the build system
+$cmake $target
+retval=$?
+
+if [ $retval -ne 0 ];
+then
+	exit $retval
+fi
+
+
 # Build
-$cmake ../libinstrument-1.0/
 make
-make install
+
+
+# Install
+if [ $? -eq 0 ];
+then
+	make install
+fi
 
 exit $?
-
