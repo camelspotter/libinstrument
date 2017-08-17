@@ -1,5 +1,35 @@
-Study and finalize license
+generic {
+	study and finalize license
 
-- Consider adding equals, hashcode, to_string, serialize to object
+	consider inter-collection methods (join, intersect, add)
 
-- Consider inter-chain methods (join, intersect, add)
+	consider converting types to immutables (more expensive, easier to use)
+}
+
+
+object {
+	consider adding equals, hashcode, to_string, serialize
+}
+
+
+list {
+	consider providing sorting
+}
+
+
+string {
+	use std::regex for portability
+
+	implement i18n and l10n, convert to unicode or create a UTF-8 type
+
+	consider adding slicing, is* checks
+
+	test with advanced printf formats (with lengths, padding etc)
+
+	research how to manipulate using specific number of characters
+}
+
+
+symtab {
+	sort the table by address and implement binary lookup
+}

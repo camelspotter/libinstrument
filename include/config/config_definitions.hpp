@@ -11,6 +11,26 @@
 namespace instrument {
 
 /*
+	String trimming
+*/
+
+/**
+	@brief Trim leading whitespace only
+*/
+#define TRIM_LEADING		-1
+
+/**
+	@brief Trim trailing whitespace only
+*/
+#define TRIM_TRAILING		1
+
+/**
+	@brief Trim both leading and trailing whitespace
+*/
+#define TRIM_ALL				0
+
+
+/*
 	Library output message tags
 */
 
@@ -74,7 +94,7 @@ namespace instrument {
 /**
 	@brief Selected debug level
 */
-#define DBG_LEVEL			
+#define DBG_LEVEL			DBGL_HIGH
 
 #endif
 

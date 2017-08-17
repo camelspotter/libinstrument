@@ -11,13 +11,6 @@
 
 namespace instrument {
 
-#define TRIM_LEADING		-1
-
-#define TRIM_TRAILING		1
-
-#define TRIM_ALL				0
-
-
 /**
 	@brief Lightweight string buffer class (for ISO-8859-1 text by default)
 
@@ -129,9 +122,13 @@ public:
 
 	virtual bool match(const string&, bool = false) const;
 
+	virtual string& reduce(u32, u32);
+
 	virtual string& shred(u8 = 0);
 
 	virtual chain<string>* split(const string&, bool = true, bool = false) const;
+
+	virtual string* substring(u32 = 0, u32 = 0, bool = false);
 
 	virtual string& trim(i32 = TRIM_ALL);
 };

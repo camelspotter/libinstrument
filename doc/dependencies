@@ -2,6 +2,7 @@ std::ostream
 std::exception
 std::endl
 std::nothrow
+std::cout
 
 
 #include <dlfcn.h> {
@@ -144,16 +145,16 @@ std::nothrow
 
 
 #include <regex.h> {
-	REG_EXTENDED
-	REG_NOSUB
-	REG_ICASE
-	regex_t
-	regmatch_t
-	regoff_t
-	regcomp()
-	regexec()
-	regfree()
-	regerror()
+REG_EXTENDED
+REG_NOSUB
+REG_ICASE
+regex_t
+regmatch_t
+regoff_t
+regcomp()
+regexec()
+regfree()
+regerror()
 }
 
 
@@ -184,8 +185,8 @@ std::nothrow
 
 #include <cstdarg> {
 va_list
-	va_end()
-	va_copy()
+va_end()
+va_copy()
 va_start()
 	vsnprintf()
 	vsprintf()
@@ -196,9 +197,9 @@ va_start()
 	strerror()
 strlen()
 strcpy()
-	strncpy()
-	strcmp()
-	strcasecmp()
+strncpy()
+strcmp()
+strcasecmp()
 	strstr()
 }
 
@@ -235,7 +236,7 @@ strcpy()
 
 
 #include <cctype> {
-	isspace()
+isspace()
 }
 
 

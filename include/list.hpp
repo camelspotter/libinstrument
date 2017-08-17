@@ -140,6 +140,10 @@ list<T>& list<T>::memalign(u32 slots, bool keep)
 /**
  * @brief Object constructor
  *
+ * @param[in] slots the minimum slot count
+ *
+ * @param[in] ordered true to keep the list ordered
+ *
  * @throws std::bad_alloc
  */
 template <class T>
@@ -413,8 +417,8 @@ T* list<T>::detach(u32 i)
 
 	/* If it's the last list item */
 	if ( unlikely(i == m_size - 1) ) {
-			m_size--;
-			return d;
+		m_size--;
+		return d;
 	}
 
 	/* Shift left all items after the i-th, to preserve ordering */
@@ -479,7 +483,7 @@ inline list<T>& list<T>::remove(u32 i)
  *
  * @param[in] d the searched item address (can be NULL)
  *
- * @returns the item offset in the list, -1 otherwise
+ * @returns the item offset in the list, -1 if not item is found
  */
 template <class T>
 i32 list<T>::search(const T *d) const

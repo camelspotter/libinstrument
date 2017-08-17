@@ -22,8 +22,8 @@ namespace instrument {
 	To optimize lookups the symbol table (as structured in libbfd) is parsed, the
 	non-function symbols are discarded and function symbols are demangled once and
 	stored in simpler data structures. The symbol list is sorted by address and
-	binary searched for even better lookup times, its size is fixed and its random
-	access (as opposed to a chain), so single lookups are O(n).
+	binary searched for even better lookup times. The list is random access (as
+	opposed to a chain), so single lookups are O(n).
 
 	A symtab can be traversed using callbacks and method symtab::each. The access
 	to a symtab is not thread safe, callers must implement thread synchronization

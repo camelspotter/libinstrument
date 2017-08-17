@@ -403,8 +403,10 @@ string& string::append(const string &tail)
 {
 	u32 len = m_length + tail.m_length;
 	memalign(len, true);
+
 	strcpy(m_data + m_length, tail.m_data);
 	m_length = len;
+
 	return *this;
 }
 
@@ -630,6 +632,44 @@ bool string::match(const string &expr, bool icase) const
 
 
 /**
+ * @brief Remove a substring
+ *
+ * @param[in] from the substring start offset
+ *
+ * @param[in] len the substring length
+ *
+ * @returns *this
+ *
+ * @throws std::bad_alloc
+ * @throws instrument::exception
+ */
+string& string::reduce(u32 from, u32 len)
+{
+	if ( unlikely(from >= m_length) ) {
+		throw exception("offset out of string bounds (%d >= %d)", from, m_length);
+	}
+
+	if ( unlikely(len + from > m_length) ) {
+		len = m_length - from;
+	}
+
+	if ( unlikely(len == 0) ) {
+		return *this;
+	}
+	else if ( unlikely(len == m_length) ) {
+		return clear();
+	}
+
+	for (u32 i = from, j = from + len; likely(j <= m_length); i++, j++) {
+		m_data[i] = m_data[j];
+	}
+
+	m_length -= len;
+	return *this;
+}
+
+
+/**
  * @brief Fill the whole buffer with a constant byte
  *
  * @param[in] ch the constant byte
@@ -755,6 +795,55 @@ chain<string>* string::split(const string &expr, bool imatch, bool icase) const
 		delete tokens;
 		delete word;
 		regfree(&regexp);
+		throw;
+	}
+}
+
+
+/**
+ * @brief Get a substring
+ *
+ * @param[in] from the substring start offset
+ *
+ * @param[in] len the substring length
+ *
+ * @param[in] inplace true to store the substring in place
+ *
+ * @returns the substring (heap allocated), or this if inplace is true
+ *
+ * @throws std::bad_alloc
+ * @throws instrument::exception
+ */
+string* string::substring(u32 from, u32 len, bool inplace)
+{
+	if ( unlikely(from >= m_length) ) {
+		throw exception("offset out of string bounds (%d >= %d)", from, m_length);
+	}
+
+	if ( unlikely(len + from > m_length) ) {
+		len = m_length - from;
+	}
+
+	i8 *substr = new i8[len + 1];
+	strncpy(substr, m_data + from, len);
+	substr[len] = '\0';
+
+	try {
+		string *retval = this;
+
+		if ( likely(!inplace) ) {
+			retval = new string(substr);
+		}
+		else {
+			strcpy(m_data, substr);
+			m_length = len;
+		}
+
+		delete[] substr;
+		return retval;
+	}
+	catch (...) {
+		delete[] substr;
 		throw;
 	}
 }
