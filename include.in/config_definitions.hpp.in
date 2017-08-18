@@ -17,17 +17,37 @@ namespace instrument {
 /**
 	@brief Trim leading whitespace only
 */
-#define TRIM_LEADING		-1
+#define TRIM_LEADING				-1
 
 /**
 	@brief Trim trailing whitespace only
 */
-#define TRIM_TRAILING		1
+#define TRIM_TRAILING				1
 
 /**
 	@brief Trim both leading and trailing whitespace
 */
-#define TRIM_ALL				0
+#define TRIM_ALL						0
+
+
+/*
+	Thread running statuses
+*/
+
+/**
+	@brief Thread initialized but not started
+*/
+#define THREAD_INIT					0x01
+
+/**
+	@brief Thread started
+*/
+#define THREAD_START				0x02
+
+/**
+	@brief Thread finalized and exited
+*/
+#define THREAD_EXIT					0x04
 
 
 /*

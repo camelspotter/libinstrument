@@ -39,7 +39,7 @@ OPTION(_REENTRANT "thread safety" ON)
 
 OPTION(WITH_COLOR_ASSERTIONS "color-coded assertions" ON)
 
-OPTION(WITH_COLOR_TERM "support color terminals (VT100)" OFF)
+OPTION(WITH_COLOR_TERM "support color terminals (VT100)" ON)
 
 OPTION(WITH_DEBUG "include debugging code" ON)
 
@@ -105,7 +105,7 @@ SET(SOURCES
 	${SRC_ROOT}/process.cpp
 
 	${SRC_ROOT}/property.cpp
-	
+
 	${SRC_ROOT}/stack.cpp
 
 	${SRC_ROOT}/string.cpp
@@ -202,20 +202,20 @@ SET(HEADERS
 	${HDR_ROOT}/process.hpp
 
 	${HDR_ROOT}/property.hpp
-	
+
 	${HDR_ROOT}/stack.hpp													# ok
 
-	${HDR_ROOT}/string.hpp
+	${HDR_ROOT}/string.hpp												# ok
 
 	${HDR_ROOT}/symbol.hpp												# ok
 
-	${HDR_ROOT}/symtab.hpp
+	${HDR_ROOT}/symtab.hpp												# ok
 
-	${HDR_ROOT}/thread.hpp
+	${HDR_ROOT}/thread.hpp												# ok
 
 	${HDR_ROOT}/tracer.hpp
 
-	${HDR_ROOT}/util.hpp
+	${HDR_ROOT}/util.hpp													# ok
 )
 
 IF(WITH_FILTER)

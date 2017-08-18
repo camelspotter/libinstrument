@@ -3,7 +3,9 @@ generic {
 
 	consider inter-collection methods (join, intersect, add)
 
-	consider converting types to immutables (more expensive, easier to use)
+	research converting types to immutables (more expensive, easier to use)
+	
+	check UNIX, Cygwin, MinGW, Android Linux portability
 }
 
 
@@ -18,7 +20,7 @@ list {
 
 
 string {
-	use std::regex for portability
+	use std::regex (at least C++11) for portability
 
 	implement i18n and l10n, convert to unicode or create a UTF-8 type
 
@@ -32,4 +34,11 @@ string {
 
 symtab {
 	sort the table by address and implement binary lookup
+}
+
+
+thread {
+	use std::thread (at least C++11) class for portability
+	
+	find a way to obtain current call arguments
 }

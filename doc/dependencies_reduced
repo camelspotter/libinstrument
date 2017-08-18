@@ -1,0 +1,156 @@
+#include <dlfcn.h> {
+	RTLD_LOCAL
+	RTLD_LAZY
+	RTLD_NOLOAD
+	dlclose()
+	dlopen()
+	dlerror()
+	dlsym()
+}
+
+
+#include <sys/stat.h> {
+S_ISREG
+S_ISCHR
+S_IRUSR
+S_IRGRP
+S_IROTH
+S_IWUSR
+S_IWGRP
+S_IWOTH
+	struct stat
+	stat()
+	fstat()
+}
+
+
+#include <sys/time.h> {
+	struct timeval
+	gettimeofday()
+}
+
+
+#include <sys/file.h> {
+	LOCK_EX
+	LOCK_UN
+	flock()
+}
+
+
+#include <sys/socket.h> {
+	AF_INET
+	SOCK_STREAM
+	SOL_SOCKET
+	sockaddr_in
+	sockaddr
+	socket()
+	connect()
+	setsockopt()
+	shutdown()
+}
+
+
+#include <arpa/inet.h> {
+	htons()
+	inet_addr()
+}
+
+
+#include <fcntl.h> {
+	O_RDONLY
+	O_WRONLY
+	O_CREAT
+	O_APPEND
+	O_NOCTTY
+	open()
+	close()
+}
+
+
+#include <sys/mman.h> {
+	PROT_READ
+	MAP_SHARED
+	MAP_FAILED
+	mmap()
+	munmap()
+}
+
+
+#include <termios.h> {
+	CS8
+	CRTSCTS
+	CREAD
+	CLOCAL
+	IGNPAR
+	VMIN
+	TCSANOW
+	TCIOFLUSH
+	B9600
+	B19200
+	B38400
+	B57600
+	B115200
+	B230400
+	B460800
+	struct termios
+	tcsetattr()
+	tcdrain()
+	tcflush()
+}
+
+
+#include <unistd.h> {
+	SEEK_SET
+	SEEK_CUR
+	pid_t
+getpid()
+geteuid()
+getegid()
+readlink()
+	dup()
+	write()
+	fsync()
+	fdatasync()
+	lseek()
+	isatty()
+}
+
+
+#include <link.h> {
+	dl_phdr_info
+	dl_iterate_phdr()
+}
+
+
+#include <cstdio> {
+	FILE
+	size_t
+snprintf()
+	popen()
+	pclose()
+	fgetc()
+	ferror()
+}
+
+
+#include <cerrno> {
+	ENOENT
+	EINTR
+	EAGAIN
+errno
+}
+
+
+gcc built-ins {
+	__cplusplus
+	__x86_64__
+	__ppc64__
+	__GNUC__
+	extern "C" {}
+	__cyg_profile_func_enter()
+	__cyg_profile_func_exit()
+	__builtin_expect()
+	__builtin_prefetch()
+__attribute((constructor))
+__attribute((destructor))
+}

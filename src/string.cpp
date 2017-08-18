@@ -640,7 +640,6 @@ bool string::match(const string &expr, bool icase) const
  *
  * @returns *this
  *
- * @throws std::bad_alloc
  * @throws instrument::exception
  */
 string& string::reduce(u32 from, u32 len)

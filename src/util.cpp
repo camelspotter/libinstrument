@@ -30,6 +30,10 @@ void util::on_lib_load()
 	catch (std::exception &x) {
 		std::cerr << x;
 	}
+	catch (...) {
+		std::cerr << "A generic exception was thrown"
+							<< std::endl;
+	}
 
 	exit(EXIT_FAILURE);
 }
@@ -119,7 +123,9 @@ const i8* util::executable_path()
  *
  * @param[in] var the variable name (can be NULL)
  *
- * @returns the variable components, tokenized with ':' (heap allocated)
+ * @returns
+ *	the variable components, tokenized with ':' (heap allocated), or NULL if var
+ *	is either NULL or the variable doesn't exist in the shell environment
  *
  * @throws std::bad_alloc
  * @throws instrument::exception
@@ -153,6 +159,7 @@ chain<string>* util::getenv(const i8 *var)
  * @param[in,out] argv the CLI argument vector
  *
  * @note If an exception occurs, the process exits
+ * @note The arguments are altered to reflect the move of CLI arguments
  */
 void util::init(i32 &argc, i8 **argv)
 {
@@ -162,17 +169,20 @@ void util::init(i32 &argc, i8 **argv)
 		return;
 	}
 
+	const i8 *prefix = "--instrument-";
+	u32 prefix_len = strlen(prefix);
+
 	try {
 		for (i32 i = 0; likely(i < argc); i++) {
 			const i8 *arg = argv[i];
 
 			/* If the argument is not libinstrument-related */
-			if ( likely(strstr(arg, "--instrument-") != arg) ) {
+			if ( likely(strstr(arg, prefix) != arg) ) {
 				continue;
 			}
 
-			if ( likely(strlen(arg) > 13) ) {
-				s_config->add(new string(arg + 13));
+			if ( likely(strlen(arg) > prefix_len) ) {
+				s_config->add(new string(arg + prefix_len));
 			}
 
 			/* Remove it from the argument vector */
@@ -191,8 +201,8 @@ void util::init(i32 &argc, i8 **argv)
 
 		for (u32 i = 0, sz = s_config->size(); likely(i < sz); i++) {
 			const i8 *option =
-				s_config->at(i)
-								->cstring();
+				s_config	->at(i)
+									->cstring();
 
 			util::dbg_info("  arg %d: --instrument-(%s)", i, option);
 		}
@@ -418,6 +428,8 @@ void* util::memswap(void *mem, u32 sz)
  * @param[in] sz the block size
  *
  * @returns the first argument
+ *
+ * @note This method is used for portability (in place of BSD's bzero)
  */
 void* util::memzero(void *mem, u32 sz)
 {
@@ -532,7 +544,9 @@ void util::dbg(console_tag_t tag, const i8 *fmt, va_list args)
 			header(std::cerr, tag);
 		}
 
-		std::cerr << msg << "\r\n";
+		std::cerr	<< msg
+							<< std::endl;
+
 		delete[] msg;
 		unlock();
 	}
@@ -641,22 +655,22 @@ void util::header(std::ostream &stream, console_tag_t tag)
 		fg = WARNING_TAG_FG;
 	}
 
-	stream << "\e[38;5;"
-				 << std::dec
-				 << fg
-				 << "m"
-				 << tag
-				 << "\e[0m";
+	stream	<< "\e[38;5;"
+				 	<< std::dec
+				 	<< fg
+				 	<< "m"
+				 	<< tag
+				 	<< "\e[0m";
 #else
-	stream << tag;
+	stream	<< tag;
 #endif
 
-	stream << " ["
-				 << std::dec
-				 << getpid()
-				 << ", 0x"
-				 << std::hex
-				 << pthread_self();
+	stream	<< " ["
+				 	<< std::dec
+				 	<< getpid()
+				 	<< ", 0x"
+				 	<< std::hex
+				 	<< pthread_self();
 
 	const i8 *name = NULL;
 	const tracer *iface = tracer::interface();
@@ -667,9 +681,9 @@ void util::header(std::ostream &stream, console_tag_t tag)
 					 ->name();
 	}
 
-	stream << " ("
-				 << ((likely(name != NULL)) ? name : "anonymous")
-				 << ")] ";
+	stream	<< " ("
+				 	<< ((likely(name != NULL)) ? name : "anonymous")
+				 	<< ")] ";
 }
 
 

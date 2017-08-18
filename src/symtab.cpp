@@ -43,7 +43,7 @@ m_table(NULL)
 		if ( unlikely(fd == NULL) ) {
 			bfd_error bfd_errno = bfd_get_error();
 			throw exception(
-				"failed to open file '%s' (bfd errno %d - %s)",
+				"failed to open binary file '%s' (bfd errno %d - %s)",
 				m_path,
 				bfd_errno,
 				bfd_errmsg(bfd_errno));
@@ -53,7 +53,7 @@ m_table(NULL)
 		if ( unlikely(!bfd_check_format(fd, bfd_object)) ) {
 			bfd_error bfd_errno = bfd_get_error();
 			throw exception(
-				"failed to verify file '%s' (bfd errno %d - %s)",
+				"failed to verify file '%s' as objective code (bfd errno %d - %s)",
 				m_path,
 				bfd_errno,
 				bfd_errmsg(bfd_errno));
@@ -62,12 +62,12 @@ m_table(NULL)
 		/* Get the symbol table storage size */
 		i32 sz = bfd_get_symtab_upper_bound(fd);
 		if ( unlikely(sz == 0) ) {
-			throw exception("file '%s' is stripped", m_path);
+			throw exception("objective code file '%s' is stripped", m_path);
 		}
 		else if ( unlikely(sz < 0) ) {
 			bfd_error bfd_errno = bfd_get_error();
 			throw exception(
-				"failed to parse file '%s' (bfd errno %d - %s)",
+				"failed to parse objective code file '%s' (bfd errno %d - %s)",
 				m_path,
 				bfd_errno,
 				bfd_errmsg(bfd_errno));
@@ -77,7 +77,7 @@ m_table(NULL)
 		tbl = new asymbol*[sz];
 		i32 cnt = bfd_canonicalize_symtab(fd, tbl);
 		if ( unlikely(cnt == 0) ) {
-			throw exception("file '%s' is stripped", m_path);
+			throw exception("objective code file '%s' is stripped", m_path);
 		}
 		else if ( unlikely(cnt < 0) ) {
 			bfd_error bfd_errno = bfd_get_error();
@@ -396,20 +396,33 @@ symtab& symtab::print(std::ostream &out) const
 	out << "Symbol enumeration of '"
 			<< m_path
 			<< "' ("
+			<< std::dec
 			<< size()
-			<< " symbols @"
+			<< " symbols @ 0x"
 			<< std::hex
 			<< m_base
-			<< ")\n";
+			<< ")"
+			<< std::endl;
 
 	for (u32 i = 0, sz = m_table->size(); likely(i < sz); i++) {
 		const symbol *sym = m_table->at(i);
 
-		out << "  Symbol @"
-				<< sym->addr()
-				<< ": "
+		out << "  "
 				<< sym->name()
-				<< "\n";
+				<< " @ "
+#ifdef WITH_COLOR_TERM
+				<< "\e[38;5;"
+				<< std::dec
+				<< HLT_NUMBER_FG
+				<< "m"
+#endif
+				<< "0x"
+				<< std::hex
+				<< sym->addr()
+#ifdef WITH_COLOR_TERM
+				<< "\e[0m"
+#endif
+				<< std::endl;
 	}
 
 	return const_cast<symtab&> (*this);

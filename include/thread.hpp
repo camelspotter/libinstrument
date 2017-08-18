@@ -12,24 +12,6 @@
 
 namespace instrument {
 
-/* Thread running status */
-
-#define THREAD_INIT									0x01
-
-#define THREAD_START								0x02
-
-#define THREAD_EXIT									0x04
-
-
-/* Thread status check macros */
-
-#define is_thread_initialized(x)		(x == THREAD_INIT)
-
-#define is_thread_started(x)				(x == THREAD_START)
-
-#define is_thread_finished(x)				(x == THREAD_EXIT)
-
-
 /**
 	@brief This class represents a thread of execution in the instrumented process
 

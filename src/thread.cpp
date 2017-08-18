@@ -331,7 +331,7 @@ inline bool thread::is(pthread_t id) const
 
 
 /**
- * @brief Check if this thread is of a specific name
+ * @brief Check if this thread has a specific name
  *
  * @param[in] nm the name (can be NULL)
  *
