@@ -79,6 +79,16 @@ typedef const i8*						console_tag_t;
 */
 typedef u8									thread_status_t;
 
+/**
+	@brief Thread entry function argument type
+*/
+typedef void*								thread_arg_t;
+
+/**
+	@brief Thread entry function
+*/
+typedef void* (*						thread_main_t)(thread_arg_t);
+
 
 /*
 	Address bus size type definition

@@ -127,16 +127,17 @@ stream& stream::operator=(const stream &rval)
  */
 stream& stream::close()
 {
-	if ( likely(m_handle >= 0) ) {
-		i32 retval;
-		do {
-			retval = ::close(m_handle);
-		}
-		while ( unlikely(retval < 0 && (errno == EINTR || errno == EAGAIN)) );
-
-		m_handle = -1;
+	if ( likely(m_handle < 0) ) {
+		return *this;
 	}
 
+	i32 retval;
+	do {
+		retval = ::close(m_handle);
+	}
+	while ( unlikely(retval < 0 && (errno == EINTR || errno == EAGAIN)) );
+
+	m_handle = -1;
 	return *this;
 }
 
@@ -194,6 +195,7 @@ stream& stream::flush()
  *		<li>thread ID
  *		<li>timestamp (in microseconds)
  *	</ol><br>
+ *
  *	Each header is formatted as 'name: value\\r\\n'. All the numeric values are
  *	hexadecimal. In IDP, the header section is terminated with a double \\r\\n
  *	followed by the message body (trace data). This method just appends the four

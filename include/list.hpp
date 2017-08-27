@@ -7,7 +7,7 @@
 	@brief Class instrument::list definition and method implementation
 */
 
-#include "./exception.hpp"
+#include "./string.hpp"
 
 namespace instrument {
 
@@ -32,13 +32,13 @@ protected:
 
 	/* Protected variables */
 
-	T **m_data;												/**< @brief Data array */
+	T **m_data;										/**< @brief Data array */
 
-	bool m_ordered;										/**< @brief Maintain ordering */
+	bool m_ordered;								/**< @brief Maintain ordering */
 
-	u32 m_size;												/**< @brief Item count */
+	u32 m_size;										/**< @brief Item count */
 
-	u32 m_slots;											/**< @brief Allocated item slots */
+	u32 m_slots;									/**< @brief Allocated item slots */
 
 
 	/* Protected generic methods */
@@ -96,6 +96,8 @@ public:
 	virtual list& remove(u32);
 
 	virtual i32 search(const T*) const;
+
+	virtual list& to_string(string&) const;
 };
 
 
@@ -500,6 +502,28 @@ i32 list<T>::search(const T *d) const
 	}
 
 	return -1;
+}
+
+
+/**
+ * @brief Get a string representation
+ *
+ * @param[out] dst the destination string buffer
+ *
+ * @returns *this
+ *
+ * @throws std::bad_alloc
+ */
+template <class T>
+inline list<T>& list<T>::to_string(string &dst) const
+{
+	dst.append(	"List @ %p, %d items (%d slots), %sordered",
+							this,
+							m_size,
+							m_slots,
+							(m_ordered) ? "" : "not ");
+
+	return const_cast<list<T>&> (*this);
 }
 
 }

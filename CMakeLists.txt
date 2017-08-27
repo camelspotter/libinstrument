@@ -61,7 +61,7 @@ OPTION(WITH_STREAM "support buffered output streams" ON)
 
 IF(WITH_DEBUG)
 
-	OPTION(WITH_SYMBOL_ENUMERATION "enumerate loaded symbol tables" ON)
+	OPTION(WITH_SYMBOL_ENUMERATION "enumerate loaded symbol tables" OFF)
 
 	SET(WITH_DEBUG_LEVEL DBGL_HIGH)
 
@@ -199,7 +199,7 @@ SET(HEADERS
 
 	${HDR_ROOT}/object.hpp												# ok
 
-	${HDR_ROOT}/process.hpp
+	${HDR_ROOT}/process.hpp												# ok
 
 	${HDR_ROOT}/property.hpp
 
@@ -246,7 +246,7 @@ ENDIF(WITH_PLUGIN)
 
 IF(WITH_STREAM)
 
-	SET(HEADERS ${HEADERS} ${HDR_ROOT}/stream.hpp)
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/stream.hpp)								# ok
 
 	IF(WITH_STREAM_FILE)
 

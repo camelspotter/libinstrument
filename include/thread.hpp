@@ -23,6 +23,7 @@ namespace instrument {
 	considered thread safe
 
 	@todo Use std::thread (C++11) class for portability
+	@todo Store the entry method (to detect thread exit)
 */
 class thread: virtual public object
 {
@@ -43,9 +44,21 @@ protected:
 
 	thread_status_t m_status;		/**< @brief Running status */
 
+
+	/* Protected generic methods */
+
+	virtual thread& attach_to_process();
+
+	virtual thread& detach_from_process();
+
 public:
 
 	typedef void (*callback_t)(u32, call*);
+
+
+	/* Static methods */
+
+	static thread* fork(const i8*, thread_main_t, thread_arg_t);
 
 
 	/* Constructors, copy constructors and destructor */
@@ -89,6 +102,8 @@ public:
 
 	virtual thread& called(mem_addr_t, mem_addr_t, const i8* = NULL);
 
+	virtual thread& cancel();
+
 	virtual thread& each(const callback_t) const;
 
 	virtual bool is(pthread_t) const;
@@ -96,6 +111,8 @@ public:
 	virtual bool is(const i8*) const;
 
 	virtual bool is_current() const;
+
+	virtual thread& join(void* = NULL);
 
 	virtual thread& returned();
 

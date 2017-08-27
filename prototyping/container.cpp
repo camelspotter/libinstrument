@@ -52,7 +52,7 @@ void __cyg_profile_func_enter(void *this_fn, void *call_site)
 		context::lock();
 
     /* @todo Implement AOP core */
-    
+
   	context::unlock();
 		return;
 	}

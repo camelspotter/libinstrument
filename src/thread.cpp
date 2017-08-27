@@ -1,4 +1,4 @@
-#include "../include/thread.hpp"
+#include "../include/tracer.hpp"
 
 /**
 	@file src/thread.cpp
@@ -7,6 +7,82 @@
 */
 
 namespace instrument {
+
+/**
+ * @brief Attach (register) this thread to the running process
+ *
+ * @returns *this
+ *
+ * @throws std::bad_alloc
+ * @throws instrument::exception
+ */
+inline thread& thread::attach_to_process()
+{
+	process::current()->register_thread(this);
+	return *this;
+}
+
+
+/**
+ * @brief Detach (remove) this thread from the running process
+ *
+ * @returns *this
+ *
+ * @throws instrument::exception
+ */
+inline thread& thread::detach_from_process()
+{
+	process::current()->cleanup_thread(m_handle);
+	return *this;
+}
+
+
+/**
+ * @brief Spawn a new, instrumented and named thread
+ *
+ * @param[in] nm the new thread's name
+ *
+ * @param[in] entry the new thread's entry point
+ *
+ * @param[in] arg the new thread's entry point single argument (can be NULL)
+ *
+ * @returns the new thread
+ *
+ * @throws std::bad_alloc
+ * @throws instrument::exception
+ */
+thread* thread::fork(	const i8 *nm, thread_main_t entry, thread_arg_t arg)
+{
+	if ( unlikely(nm == NULL) ) {
+		throw exception("invalid argument: nm (=%p)", nm);
+	}
+
+	if ( unlikely(entry == NULL) ) {
+		throw exception("invalid argument: entry (=%p)", entry);
+	}
+
+	pthread_t id;
+	i32 check = pthread_create(&id, NULL, entry, arg);
+	if ( unlikely(check != 0) ) {
+		throw exception(
+			"failed to create thread '%s' (errno %d - %s)",
+			nm,
+			errno,
+			strerror(errno));
+	}
+
+	thread *retval = NULL;
+	try {
+		retval = new thread(id, nm);
+		retval->attach_to_process();
+		return retval;
+	}
+	catch (...) {
+		delete retval;
+		throw;
+	}
+}
+
 
 /**
  * @brief Object constructor
@@ -304,6 +380,20 @@ thread& thread::called(mem_addr_t addr, mem_addr_t site, const i8 *nm)
 
 
 /**
+ * @brief Cancel execution of the thread
+ *
+ * @returns *this
+ *
+ * @note Failure in thread cancellation is silently ignored
+ */
+inline thread& thread::cancel()
+{
+	pthread_cancel(m_handle);
+	return detach_from_process();
+}
+
+
+/**
  * @brief Traverse the simulated stack with a callback for each call
  *
  * @param[in] pfunc the callback (can be NULL for NO-OP)
@@ -363,9 +453,50 @@ inline bool thread::is_current() const
 
 
 /**
+ * @brief Join the thread and optionally obtain its exit status
+ *
+ * @param[out] exit_status
+ *	a pointer to obtain the joined thread's exit status (ignored if NULL). Based
+ *	on the specific thread implementation it can be heap allocated
+ *
+ * @returns *this
+ *
+ * @throws instrument::exception
+ */
+thread& thread::join(void *exit_status)
+{
+	i32 retval;
+
+	if ( likely(exit_status == NULL) ) {
+		retval = pthread_join(m_handle, NULL);
+	}
+	else {
+		retval = pthread_join(m_handle, &exit_status);
+	}
+
+	if ( unlikely(retval != 0) ) {
+		const i8 *nm = m_name;
+		if ( unlikely(nm == NULL) ) {
+			nm = "anonymous";
+		}
+
+		throw exception(
+			"failed to join thread '%s' (errno %d - %s)",
+			nm,
+			errno,
+			strerror(errno));
+	}
+
+	return detach_from_process();
+}
+
+
+/**
  * @brief Simulate a function return
  *
  * @returns *this
+ *
+ * @throws Detect return from thread entry point (thread exit)
  */
 thread& thread::returned()
 {
@@ -379,10 +510,6 @@ thread& thread::returned()
 	}
 	else {
 		m_stack->pop();
-
-		if ( unlikely(m_stack->size() == 0 && is_thread_started(m_status)) ) {
-			m_status = THREAD_EXIT;
-		}
 	}
 
 	return *this;
@@ -399,10 +526,6 @@ thread& thread::unwind()
 	while ( likely(m_lag > 0) ) {
 		m_stack->pop();
 		m_lag--;
-	}
-
-	if ( unlikely(m_stack->size() == 0 && is_thread_started(m_status)) ) {
-		m_status = THREAD_EXIT;
 	}
 
 	return *this;

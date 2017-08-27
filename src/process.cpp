@@ -1,4 +1,4 @@
-#include "../include/process.hpp"
+#include "../include/tracer.hpp"
 
 /**
 	@file src/process.cpp
@@ -9,12 +9,36 @@
 namespace instrument {
 
 /**
+ * @brief Return the currently running process
+ *
+ * @returns tracer::interface()->proc()
+ *
+ * @throws instrument::exception
+ */
+process* process::current()
+{
+	tracer *iface = tracer::interface();
+	if ( unlikely(iface == NULL) ) {
+		throw exception("Tracer interface not initialized");
+	}
+
+	process *retval = iface->proc();
+	if ( unlikely(retval == NULL) ) {
+		throw exception("No running process handle initialized");
+	}
+
+	return retval;
+}
+
+
+/**
  * @brief Object default constructor
  *
  * @throws std::bad_alloc
  */
 process::process()
 try:
+m_lock(PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP),
 m_pid(getpid()),
 m_symtabs(NULL),
 m_threads(NULL)
@@ -37,14 +61,18 @@ catch (...) {
  */
 process::process(const process &src)
 try:
+m_lock(PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP),
 m_pid(src.m_pid),
 m_symtabs(NULL),
 m_threads(NULL)
 {
+	src.lock();
 	m_symtabs = src.m_symtabs->clone();
 	m_threads = src.m_threads->clone();
+	src.unlock();
 }
 catch (...) {
+	src.unlock();
 	delete m_symtabs;
 	m_symtabs = NULL;
 }
@@ -59,6 +87,8 @@ process::~process()
 	delete m_threads;
 	m_symtabs = NULL;
 	m_threads = NULL;
+
+	unlock();
 }
 
 
@@ -97,138 +127,44 @@ inline pid_t process::pid() const
  */
 process& process::operator=(const process &rval)
 {
+	rval.lock();
+	lock();
+
 	if ( unlikely(this == &rval) ) {
-		return *this;
+		rval.unlock();
+		return unlock();
 	}
 
 	m_pid = rval.m_pid;
 	*m_symtabs = *rval.m_symtabs;
 	*m_threads = *rval.m_threads;
 
-	return *this;
+	rval.unlock();
+	return unlock();
 }
 
 
 /**
- * @brief Spawn a new, instrumented and named thread
- *
- * @param[in] nm the new thread's name
- *
- * @param[in] entry the new thread's entry point
- *
- * @param[in] arg the new thread's entry point single argument (can be NULL)
+ * @brief Obtain object access
  *
  * @returns *this
- *
- * @throws std::bad_alloc
- * @throws instrument::exception
- *
- * @todo Return the newly created thread
  */
-process& process::fork_thread(const i8 *nm,
-															 thread_main_t entry,
-															 thread_arg_t arg)
+inline process& process::lock() const
 {
-	__D_ASSERT(arg != NULL);
-
-	if ( unlikely(nm == NULL) ) {
-		throw exception("invalid argument: nm (=%p)", nm);
-	}
-
-	if ( unlikely(entry == NULL) ) {
-		throw exception("invalid argument: entry (=%p)", entry);
-	}
-
-	pthread_t id;
-	i32 retval = pthread_create(&id, NULL, entry, arg);
-	if ( unlikely(retval != 0) ) {
-		throw exception(
-			"failed to create thread '%s' (errno %d - %s)",
-			nm,
-			errno,
-			strerror(errno));
-	}
-
-	thread *t = NULL;
-	try {
-		t = new thread(id, nm);
-		m_threads->add(t);
-		return *this;
-	}
-	catch (...) {
-		delete t;
-		throw;
-	}
+	pthread_mutex_lock(const_cast<pthread_mutex_t*> (&m_lock));
+	return const_cast<process&> (*this);
 }
 
 
 /**
- * @brief Cancel the execution of a thread
- *
- * @param[in] t the thread (can be NULL for NO-OP)
+ * @brief Yield object access
  *
  * @returns *this
- *
- * @note Failure in thread cancellation is silently ignored
  */
-process& process::thread_cancel(thread *t)
+inline process& process::unlock() const
 {
-	__D_ASSERT(t != NULL);
-	if ( likely(t == NULL) ) {
-		return *this;
-	}
-
-	pthread_t id = t->handle();
-	pthread_cancel(id);
-
-	return cleanup_thread(id);
-}
-
-
-/**
- * @brief Join a thread and optionally obtain its exit status
- *
- * @param[in] t the thread (can be NULL for NO-OP)
- *
- * @param[out] exit_status
- *	a pointer to obtain the joined thread's exit status (ignored if NULL). Based
- *	on the specific thread implementation it can be heap allocated
- *
- * @returns *this
- *
- * @throws instrument::exception
- */
-process& process::thread_join(thread *t, void *exit_status)
-{
-	__D_ASSERT(t != NULL);
-	if ( unlikely(t == NULL) ) {
-		return *this;
-	}
-
-	pthread_t id = t->handle();
-	i32 retval;
-
-	if ( likely(exit_status == NULL) ) {
-		retval = pthread_join(id, NULL);
-	}
-	else {
-		retval = pthread_join(id, &exit_status);
-	}
-
-	if ( unlikely(retval != 0) ) {
-		const i8 *nm = t->name();
-		if ( likely(nm == NULL) ) {
-			nm = "anonymous";
-		}
-
-		throw exception(
-			"failed to join thread '%s' (errno %d - %s)",
-			nm,
-			errno,
-			strerror(errno));
-	}
-
-	return cleanup_thread(id);
+	pthread_mutex_unlock(const_cast<pthread_mutex_t*> (&m_lock));
+	return const_cast<process&> (*this);
 }
 
 
@@ -248,13 +184,16 @@ process& process::thread_join(thread *t, void *exit_status)
  */
 process& process::add_module(const i8 *path, mem_addr_t base)
 {
+	lock();
+
 	symtab *table = NULL;
 	try {
 		table = new symtab(path, base);
 		m_symtabs->add(table);
-		return *this;
+		return unlock();
 	}
 	catch (...) {
+		unlock();
 		delete table;
 		throw;
 	}
@@ -271,20 +210,23 @@ process& process::add_module(const i8 *path, mem_addr_t base)
  * @param[out] base the load base address of the module
  *
  * @returns the path of the module or NULL if the address is unresolved
- *
- * @see tracer::addr2line
  */
-const i8* process::ilookup(mem_addr_t addr, mem_addr_t &base) const
+const i8* process::inverse_lookup(mem_addr_t addr, mem_addr_t &base) const
 {
+	lock();
+
 	for (u32 i = 0, sz = m_symtabs->size(); likely(i < sz); i++) {
 		const symtab *table = m_symtabs->at(i);
 
 		if ( unlikely(table->exists(addr)) ) {
 			base = table->base();
-			return table->path();
+			const i8 *retval = table->path();
+			unlock();
+			return retval;
 		}
 	}
 
+	unlock();
 	base = 0;
 	return NULL;
 }
@@ -303,17 +245,20 @@ const i8* process::ilookup(mem_addr_t addr, mem_addr_t &base) const
  */
 const i8* process::lookup(mem_addr_t addr) const
 {
+	lock();
 	for (u32 i = 0, sz = m_symtabs->size(); likely(i < sz); i++) {
 		const i8* retval =
-			m_symtabs->at(i)
-							 ->addr2name(addr);
+			m_symtabs	->at(i)
+							 	->addr2name(addr);
 
 		if ( unlikely(retval != NULL) ) {
+			unlock();
 			return retval;
 		}
 	}
 
 	/* The address was not resolved */
+	unlock();
 	return NULL;
 }
 
@@ -336,13 +281,16 @@ inline u32 process::module_count() const
  */
 u32 process::symbol_count() const
 {
+	lock();
+
 	u32 cnt = 0;
 	for (i32 i = m_symtabs->size() - 1; likely(i >= 0); i--) {
 		cnt +=
-			m_symtabs->at(i)
-							 ->size();
+			m_symtabs	->at(i)
+							 	->size();
 	}
 
+	unlock();
 	return cnt;
 }
 
@@ -367,6 +315,8 @@ u32 process::symbol_count() const
  */
 process& process::cleanup_thread(pthread_t id)
 {
+	lock();
+
 	for (u32 i = 0, sz = m_threads->size(); likely(i < sz); i++) {
 		const thread *thr = m_threads->at(i);
 
@@ -376,7 +326,7 @@ process& process::cleanup_thread(pthread_t id)
 		}
 	}
 
-	return *this;
+	return unlock();
 }
 
 
@@ -389,6 +339,8 @@ process& process::cleanup_thread(pthread_t id)
  */
 process& process::cleanup_zombie_threads()
 {
+	lock();
+
 	for (u32 i = 0, sz = m_threads->size(); likely(i < sz); i++) {
 		const thread *thr = m_threads->at(i);
 
@@ -403,7 +355,7 @@ process& process::cleanup_zombie_threads()
 		}
 	}
 
-	return *this;
+	return unlock();
 }
 
 
@@ -417,15 +369,18 @@ process& process::cleanup_zombie_threads()
  * @note
  *	When an actual thread is created the m_threads chain is populated with an
  *	entry for the equivalent instrument::thread object when the thread executes
- *	its first <b>instrumented</b> function, unless process::fork_thread is used
- *	for its creation
+ *	its first <b>instrumented</b> function, unless thread::fork is used for its
+ *	creation
  */
 thread* process::current_thread() const
 {
+	lock();
+
 	for (u32 i = 0, sz = m_threads->size(); likely(i < sz); i++) {
 		thread *thr = m_threads->at(i);
 
 		if ( unlikely(thr->is_current()) ) {
+			unlock();
 			return thr;
 		}
 	}
@@ -434,10 +389,12 @@ thread* process::current_thread() const
 	try {
 		retval = new thread;
 		m_threads->add(retval);
+		unlock();
 		return retval;
 	}
 
 	catch (...) {
+		unlock();
 		delete retval;
 		throw;
 	}
@@ -455,14 +412,18 @@ thread* process::current_thread() const
  */
 thread* process::get_thread(pthread_t id) const
 {
+	lock();
+
 	for (u32 i = 0, sz = m_threads->size(); likely(i < sz); i++) {
 		thread *thr = m_threads->at(i);
 
 		if ( unlikely(thr->is(id)) ) {
+			unlock();
 			return thr;
 		}
 	}
 
+	unlock();
 	return NULL;
 }
 
@@ -483,14 +444,18 @@ thread* process::get_thread(const i8 *nm) const
 		return NULL;
 	}
 
+	lock();
+
 	for (u32 i = 0, sz = m_threads->size(); likely(i < sz); i++) {
 		thread *thr = m_threads->at(i);
 
 		if ( unlikely(thr->is(nm)) ) {
+			unlock();
 			return thr;
 		}
 	}
 
+	unlock();
 	return NULL;
 }
 
@@ -504,9 +469,51 @@ thread* process::get_thread(const i8 *nm) const
  *
  * @throws instrument::exception
  */
-inline thread* process::get_thread(u32 i) const
+thread* process::get_thread(u32 i) const
 {
-	return m_threads->at(i);
+	lock();
+
+	try {
+		thread *retval = m_threads->at(i);
+		unlock();
+		return retval;
+	}
+	catch (...) {
+		unlock();
+		throw;
+	}
+}
+
+
+/**
+ * @brief Register a thread to the process
+ *
+ * @param[in] t the registered thread
+ *
+ * @returns *this;
+ *
+ * @throws std::bad_alloc
+ * @throws instrument::exception
+ */
+process& process::register_thread(thread *t)
+{
+	lock();
+
+	if ( unlikely(get_thread(t->handle()) != NULL) ) {
+		unlock();
+		throw new exception(	"Process %d already has thread 0x%x registered",
+													m_pid,
+													t->handle());
+	}
+
+	try {
+		m_threads->add(t);
+		return unlock();
+	}
+	catch (...) {
+		unlock();
+		throw;
+	}
 }
 
 

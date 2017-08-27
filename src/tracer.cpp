@@ -659,7 +659,7 @@ tracer& tracer::trace(string &dst)
 				const call *caller = thr->backtrace(prev);
 				mem_addr_t base = 0;
 
-				const i8 *path = m_proc->ilookup(caller->addr(), base);
+				const i8 *path = m_proc->inverse_lookup(caller->addr(), base);
 				addr2line(dst, path, cur->site() - base);
 			}
 
@@ -737,7 +737,7 @@ tracer& tracer::trace(string &dst, pthread_t id) const
 				const call *caller = thr->backtrace(prev);
 				mem_addr_t base = 0;
 
-				const i8 *path = m_proc->ilookup(caller->addr(), base);
+				const i8 *path = m_proc->inverse_lookup(caller->addr(), base);
 				addr2line(dst, path, cur->site() - base);
 			}
 

@@ -8,7 +8,6 @@
 	dlsym()
 }
 
-
 #include <sys/stat.h> {
 S_ISREG
 S_ISCHR
@@ -23,20 +22,6 @@ S_IWOTH
 	fstat()
 }
 
-
-#include <sys/time.h> {
-	struct timeval
-	gettimeofday()
-}
-
-
-#include <sys/file.h> {
-	LOCK_EX
-	LOCK_UN
-	flock()
-}
-
-
 #include <sys/socket.h> {
 	AF_INET
 	SOCK_STREAM
@@ -49,12 +34,10 @@ S_IWOTH
 	shutdown()
 }
 
-
 #include <arpa/inet.h> {
 	htons()
 	inet_addr()
 }
-
 
 #include <fcntl.h> {
 	O_RDONLY
@@ -63,9 +46,8 @@ S_IWOTH
 	O_APPEND
 	O_NOCTTY
 	open()
-	close()
+close()
 }
-
 
 #include <sys/mman.h> {
 	PROT_READ
@@ -74,7 +56,6 @@ S_IWOTH
 	mmap()
 	munmap()
 }
-
 
 #include <termios.h> {
 	CS8
@@ -98,29 +79,26 @@ S_IWOTH
 	tcflush()
 }
 
-
 #include <unistd.h> {
 	SEEK_SET
 	SEEK_CUR
-	pid_t
+pid_t
 getpid()
 geteuid()
 getegid()
 readlink()
-	dup()
-	write()
+dup()
+write()
 	fsync()
 	fdatasync()
 	lseek()
 	isatty()
 }
 
-
 #include <link.h> {
 	dl_phdr_info
 	dl_iterate_phdr()
 }
-
 
 #include <cstdio> {
 	FILE
@@ -132,14 +110,12 @@ snprintf()
 	ferror()
 }
 
-
 #include <cerrno> {
 	ENOENT
-	EINTR
-	EAGAIN
+EINTR
+EAGAIN
 errno
 }
-
 
 gcc built-ins {
 	__cplusplus

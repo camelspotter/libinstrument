@@ -21,13 +21,15 @@ namespace instrument {
 	one for each objective code module (executable and selected DSO libraries). A
 	process object offers methods to perform batch symbol lookups, inverse lookups
 	(given a resolved symbol find the module that defines it) and thread handling.
-	Access to the process object <b>is not thread safe</b>
+	Access to the process object <b>is thread safe</b>
 */
 class process: virtual public object
 {
 protected:
 
 	/* Protected variables */
+
+	pthread_mutex_t m_lock;							/**< @brief Access mutex */
 
 	pid_t m_pid;												/**< @brief Process ID */
 
@@ -37,9 +39,9 @@ protected:
 
 public:
 
-	typedef void*	thread_arg_t;
+	/* Static methods */
 
-	typedef void* (*thread_main_t)(thread_arg_t);
+	static process* current();
 
 
 	/* Constructors, copy constructors and destructor */
@@ -65,18 +67,18 @@ public:
 
 	/* Generic methods */
 
-	virtual process& fork_thread(const i8*, thread_main_t, thread_arg_t);
+	/* Access control */
 
-	virtual process& thread_cancel(thread*);
+	virtual process& lock() const;
 
-	virtual process& thread_join(thread*, void* = NULL);
+	virtual process& unlock() const;
 
 
 	/* Module (symtab) handling methods */
 
 	virtual process& add_module(const i8*, mem_addr_t);
 
-	virtual const i8* ilookup(mem_addr_t, mem_addr_t&) const;
+	virtual const i8* inverse_lookup(mem_addr_t, mem_addr_t&) const;
 
 	virtual const i8* lookup(mem_addr_t) const;
 
@@ -98,6 +100,8 @@ public:
 	virtual thread* get_thread(const i8*) const;
 
 	virtual thread* get_thread(u32) const;
+
+	virtual process& register_thread(thread*);
 
 	virtual u32 thread_count() const;
 };

@@ -10,7 +10,7 @@ generic {
 
 
 object {
-	consider adding equals, hashcode, to_string, serialize
+	consider adding equals, hashcode, to_string, serialize, identity
 }
 
 
@@ -41,4 +41,6 @@ thread {
 	use std::thread (at least C++11) class for portability
 	
 	find a way to obtain current call arguments
+	
+	store the entry method (to detect thread exit)
 }
