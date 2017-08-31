@@ -484,6 +484,25 @@ inline string& string::clear()
 
 
 /**
+ * @brief Clip the string to a new length
+ *
+ * param[in] offset the clipping offset
+ *
+ * @returns *this
+ */
+inline string& string::clip(u32 pffset)
+{
+	if ( unlikely(offset >= m_length) ) {
+		return *this;
+	}
+
+	m_data[offset] = '\0';
+	m_length = offset;
+	return *this;
+}
+
+
+/**
  * @brief Compare to another string
  *
  * @param[in] rval the compared string
@@ -645,11 +664,11 @@ bool string::match(const string &expr, bool icase) const
 string& string::reduce(u32 from, u32 len)
 {
 	if ( unlikely(from >= m_length) ) {
-		throw exception("offset out of string bounds (%d >= %d)", from, m_length);
+		return *this;
 	}
 
 	if ( unlikely(len + from > m_length) ) {
-		len = m_length - from;
+		return clip(from);
 	}
 
 	if ( unlikely(len == 0) ) {
