@@ -112,6 +112,8 @@ public:
 
 	virtual string& clear();
 
+	virtual string& clip(u32);
+
 	virtual i32 compare(const string&, bool = false) const;
 
 	virtual bool equals(const string&, bool = false) const;
