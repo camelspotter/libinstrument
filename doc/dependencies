@@ -1,3 +1,9 @@
+#include <arpa/inet.h> {
+	htons()
+	inet_addr()
+}
+
+
 #include <bfd.h> {
 	asymbol
 	bfd
@@ -19,6 +25,14 @@
 
 #include <cctype> {
 	isspace()
+}
+
+
+#include <cerrno> {
+	EAGAIN
+	EINTR
+	ENOENT
+	errno
 }
 
 
@@ -57,6 +71,28 @@
 
 #include <cxxabi.h> {
 	abi::__cxa_demangle()
+}
+
+
+#include <dlfcn.h> {
+	dlclose()
+	dlerror()
+	dlopen()
+	dlsym()
+	RTLD_LAZY
+	RTLD_LOCAL
+	RTLD_NOLOAD
+}
+
+
+#include <fcntl.h> {
+	close()
+	O_APPEND
+	O_CREAT
+	O_NOCTTY
+	O_RDONLY
+	O_WRONLY
+	open()
 }
 
 
@@ -114,7 +150,85 @@
 }
 
 
+#include <sys/mman.h> {
+	MAP_FAILED
+	MAP_SHARED
+	mmap()
+	munmap()
+	PROT_READ
+}
+
+
+#include <sys/socket.h> {
+	AF_INET
+	connect()
+	setsockopt()
+	shutdown()
+	SOCK_STREAM
+	sockaddr
+	sockaddr_in
+	socket()
+	SOL_SOCKET
+}
+
+
+#include <sys/stat.h> {
+	fstat()
+	S_IRGRP
+	S_IROTH
+	S_IRUSR
+	S_ISCHR
+	S_ISREG
+	S_IWGRP
+	S_IWOTH
+	S_IWUSR
+	stat()
+	struct stat
+}
+
+
 #include <sys/time.h> {
 	gettimeofday()
 	struct timeval
+}
+
+
+#include <termios.h> {
+	B115200
+	B19200
+	B230400
+	B38400
+	B460800
+	B57600
+	B9600
+	CLOCAL
+	CRTSCTS
+	CREAD
+	CS8
+	IGNPAR
+	struct termios
+	tcdrain()
+	tcflush()
+	TCIOFLUSH
+	TCSANOW
+	tcsetattr()
+	VMIN
+}
+
+
+#include <unistd.h> {
+	dup()
+	fdatasync()
+	fsync()
+	ftruncate()
+	getegid()
+	geteuid()
+	getpid()
+	isatty()
+	lseek()
+	pid_t
+	readlink()
+	SEEK_CUR
+	SEEK_SET
+	write()
 }

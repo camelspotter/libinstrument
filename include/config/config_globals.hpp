@@ -19,8 +19,6 @@ static const codepage_t g_codepages[] = {
 
 	"iso-8859-1",
 
-	"iso-8859-7"
-
 };
 
 /**
@@ -59,6 +57,11 @@ static const u16 g_prealloc_sz = 128;
 */
 static const i8 g_prefix[] = "/usr/local";
 
+/**
+	@brief Default properties file, relative path
+*/
+static const i8 g_properties_path[] = "share/libinstrument/instrument.properties";
+
 
 /*
 	Syntax highlighter globals
@@ -77,6 +80,20 @@ static const i8 g_trace_syntax[] = "[ \t\n\r\\{\\}\\(\\)\\*&,:<>]+";
 
 
 /*
+	Stty stream globals
+*/
+
+#ifdef WITH_STREAM_STTY
+
+/**
+	@brief IDP (Instrumentation Data Protocol) service serial port
+*/
+static const i8 g_idp_stty_port[] = "/dev/ttyS0";
+
+#endif
+
+
+/*
 	TCP stream globals
 */
 
@@ -85,7 +102,7 @@ static const i8 g_trace_syntax[] = "[ \t\n\r\\{\\}\\(\\)\\*&,:<>]+";
 /**
 	@brief IDP (Instrumentation Data Protocol) service port
 */
-static const i32 g_idp_port = 4242;
+static const i32 g_idp_tcp_port = 4242;
 
 #endif
 

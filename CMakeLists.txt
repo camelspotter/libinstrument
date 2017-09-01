@@ -87,6 +87,11 @@ SET(HDR_ROOT include)
 SET(HDR_IN_ROOT ${HDR_ROOT}.in)
 
 
+# Code configuration variables
+
+SET(PROPERTIES_PATH share/lib${PROJECT_NAME}/${PROJECT_NAME}.properties)
+
+
 # Source file listings
 
 SET(SOURCES
@@ -103,6 +108,8 @@ SET(SOURCES
 	${SRC_ROOT}/object.cpp
 
 	${SRC_ROOT}/process.cpp
+
+	${SRC_ROOT}/properties.cpp
 
 	${SRC_ROOT}/property.cpp
 
@@ -201,6 +208,8 @@ SET(HEADERS
 
 	${HDR_ROOT}/process.hpp												# ok
 
+	${HDR_ROOT}/properties.hpp
+
 	${HDR_ROOT}/property.hpp
 
 	${HDR_ROOT}/stack.hpp													# ok
@@ -220,7 +229,7 @@ SET(HEADERS
 
 IF(WITH_FILTER)
 
-	SET(HEADERS ${HEADERS} ${HDR_ROOT}/filter.hpp)
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/filter.hpp)								# ok
 
 ENDIF(WITH_FILTER)
 
@@ -229,18 +238,18 @@ IF(WITH_HIGHLIGHT)
 	SET(HEADERS
 			${HEADERS}
 
-			${HDR_ROOT}/dictionary.hpp
+			${HDR_ROOT}/dictionary.hpp																# ok
 
-			${HDR_ROOT}/parser.hpp
+			${HDR_ROOT}/parser.hpp																		# ok
 
-			${HDR_ROOT}/style.hpp
+			${HDR_ROOT}/style.hpp																			# ok
 	)
 
 ENDIF(WITH_HIGHLIGHT)
 
 IF(WITH_PLUGIN)
 
-	SET(HEADERS ${HEADERS} ${HDR_ROOT}/plugin.hpp)
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/plugin.hpp)								# ok
 
 ENDIF(WITH_PLUGIN)
 
@@ -250,19 +259,19 @@ IF(WITH_STREAM)
 
 	IF(WITH_STREAM_FILE)
 
-		SET(HEADERS ${HEADERS} ${HDR_ROOT}/file.hpp)
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/file.hpp)								# ok
 
 	ENDIF(WITH_STREAM_FILE)
 
 	IF(WITH_STREAM_STTY)
 
-		SET(HEADERS ${HEADERS} ${HDR_ROOT}/stty.hpp)
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/stty.hpp)								# ok
 
 	ENDIF(WITH_STREAM_STTY)
 
 	IF(WITH_STREAM_TCP)
 
-		SET(HEADERS ${HEADERS} ${HDR_ROOT}/tcp_socket.hpp)
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/tcp_socket.hpp)					# ok
 
 	ENDIF(WITH_STREAM_TCP)
 
@@ -385,6 +394,10 @@ INSTALL(FILES ${PROJECT_BINARY_DIR}/${HDR_IN_ROOT}/instrument.hpp DESTINATION in
 LIST_FILES(etc/*.dict DICTIONARIES)
 
 INSTALL(FILES ${DICTIONARIES} DESTINATION etc)
+
+LIST_FILES(config/*.properties PROPERTIES)
+
+INSTALL(FILES ${PROPERTIES} DESTINATION share/libinstrument)
 
 
 # Store final variable set

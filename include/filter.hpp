@@ -11,11 +11,6 @@
 
 namespace instrument {
 
-#define MODULE_FILTER		false
-
-#define SYMBOL_FILTER		true
-
-
 /**
 	@brief Instrumentation filter
 
@@ -31,9 +26,11 @@ protected:
 
 	/* Protected variables */
 
-	regex_t m_expr;										/**< @brief Filter expression */
+	regex_t m_expr;								/**< @brief Filter expression */
 
-	bool m_mode;											/**< @brief Filter type switch */
+	bool m_mode;									/**< @brief Filter type switch */
+
+	i8 *m_src_expr;								/**< @brief Source (uncompiled) expression */
 
 
 	/* Protected copy constructors */
@@ -62,6 +59,8 @@ public:
 
 
 	/* Accessor methods */
+
+	virtual const i8* expr() const;
 
 	virtual bool mode() const;
 

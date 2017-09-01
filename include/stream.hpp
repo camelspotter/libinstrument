@@ -35,7 +35,6 @@ namespace instrument {
 		</a>
 	@see <a href="index.html#sec5_5"><b>5.5 Buffered output streams</b></a>
 
-	@todo Implement the udp_socket subclass
 	@todo <b style="color: #ff0000">[ ? ]</b> Add method try_lock
 */
 class stream: virtual public string

@@ -9,80 +9,18 @@
 namespace instrument {
 
 /**
- * @brief Free object resources
- *
- * @returns *this
- */
-property& property::clear()
-{
-	delete m_comments;
-	delete m_inline_comment;
-	delete m_name;
-	delete m_value;
-	
-	m_comments = NULL;
-	m_inline_comment = NULL;
-	m_name = NULL;
-	m_value = NULL;
-
-	return *this;
-}
-
-
-/**
  * @brief Object default constructor
  *
  * @throws std::bad_alloc
  */
-property::property()
-try:
+property::property():
 m_comments(NULL),
 m_inline_comment(NULL),
 m_invalid(false),
 m_name(NULL),
 m_value(NULL)
 {
-}
-catch (...) {
-	clear();
-}
-
-
-/**
- * @brief Object default constructor
- *
- * @throws std::bad_alloc
- */
-property::property(string *name)
-try:
-m_comments(NULL),
-m_inline_comment(NULL),
-m_invalid(false),
-m_name(NULL),
-m_value(NULL)
-{
-}
-catch (...) {
-	clear();
-}
-
-
-/**
- * @brief Object default constructor
- *
- * @throws std::bad_alloc
- */
-property::property(string *name, string *value)
-try:
-m_comments(NULL),
-m_inline_comment(NULL),
-m_invalid(false),
-m_name(NULL),
-m_value(NULL)
-{
-}
-catch (...) {
-	clear();
+	m_comments = new list<string>(1, true);
 }
 
 
@@ -101,24 +39,10 @@ m_invalid(src.m_invalid),
 m_name(NULL),
 m_value(NULL)
 {
-	if ( likely(src.m_comments != NULL) ) {
-		m_comments = src.m_comments->clone();
-	}
-	
-	if ( unlikely(src.m_inline_comment != NULL) ) {
-		m_inline_comment = src.m_inline_comment->clone();
-	}
-	
-	if ( likely(src.m_name != NULL) ) {
-		m_name = src.m_name->clone();
-	}
-	
-	if ( likely(src.m_value != NULL) ) {
-		m_value = src.m_value->clone();
-	}
+	*this = src;
 }
 catch (...) {
-	clear();
+	empty();
 }
 
 
@@ -127,7 +51,7 @@ catch (...) {
  */
 property::~property()
 {
-	clear();
+	empty();
 }
 
 
@@ -141,6 +65,28 @@ property::~property()
 inline property* property::clone() const
 {
 	return new property(*this);
+}
+
+
+/**
+ * @brief Get all the property comments
+ *
+ * @returns this->m_comments
+ */
+inline const list<string>* property::comments() const
+{
+	return m_comments;
+}
+
+
+/**
+ * @brief Get the property inline comment
+ *
+ * @returns this->m_inline_comment
+ */
+inline const string* property::inline_comment() const
+{
+	return m_inline_comment;
 }
 
 
@@ -192,9 +138,86 @@ property& property::operator=(const property &rval)
 		return *this;
 	}
 
-	/* todo Implement this */
+	if ( likely(rval.m_comments != NULL) ) {
+		m_comments = rval.m_comments->clone();
+	}
+
+	if ( unlikely(rval.m_inline_comment != NULL) ) {
+		m_inline_comment = rval.m_inline_comment->clone();
+	}
+
+	if ( likely(rval.m_name != NULL) ) {
+		m_name = rval.m_name->clone();
+	}
+
+	if ( likely(rval.m_value != NULL) ) {
+		m_value = rval.m_value->clone();
+	}
+
+	m_invalid = rval.m_invalid;
+	return *this;
+}
+
+
+/**
+ * @brief Get the i-th comment
+ *
+ * @param[in] i the comment index
+ *
+ * @returns this->m_comments->at(i)
+ *
+ * @throws instrument::exception
+ */
+inline const string* property::comment(u32 i) const
+{
+	if ( likely(m_comments == NULL) ) {
+		throw exception("offset out of list bounds (%d >= 0)", i);
+	}
+
+	return m_comments->at(i);
+}
+
+
+/**
+ * @brief Get the number of comments
+ *
+ * @returns this->m_comments->size()
+ */
+inline u32 property::comment_count() const
+{
+	return m_comments->size();
+}
+
+
+/**
+ * @brief Free object resources
+ *
+ * @returns *this
+ */
+property& property::empty()
+{
+	delete m_comments;
+	delete m_inline_comment;
+	delete m_name;
+	delete m_value;
+
+	m_comments = NULL;
+	m_inline_comment = NULL;
+	m_name = NULL;
+	m_value = NULL;
 
 	return *this;
+}
+
+
+/**
+ * @brief Check if the property is totally empty
+ *
+ * @returns true if all the members are uninitialized, false otherwise
+ */
+bool property::is_empty() const
+{
+	return false;
 }
 
 }

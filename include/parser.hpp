@@ -116,7 +116,7 @@ public:
 	virtual parser& remove_style(const i8*);
 
 
-	/* Parse/highlight/lookup methods */
+	/* Parse, highlight and lookup methods */
 
 	virtual string* highlight(const i8* = NULL, bool = false) const;
 

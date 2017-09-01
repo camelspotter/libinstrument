@@ -51,7 +51,7 @@ public:
 
 	/* Constructors, copy constructors and destructor */
 
-	explicit tcp_socket(const i8*, i32 = g_idp_port);
+	explicit tcp_socket(const i8*, i32 = g_idp_tcp_port);
 
 	tcp_socket(const tcp_socket&);
 

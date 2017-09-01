@@ -28,6 +28,8 @@
 #include "instrument/node.hpp"
 #include "instrument/object.hpp"
 #include "instrument/process.hpp"
+#include "instrument/properties.hpp"
+#include "instrument/property.hpp"
 #include "instrument/stack.hpp"
 #include "instrument/string.hpp"
 #include "instrument/symbol.hpp"

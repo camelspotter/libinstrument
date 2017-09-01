@@ -13,7 +13,7 @@
 namespace instrument {
 
 /**
-	@brief
+	@brief This class represents an entry in a .properties file
 */
 class property: virtual public object
 {
@@ -31,20 +31,14 @@ protected:
 
 	string *m_value;											/**< @brief Property value */
 
-
-	/* Protected generic methods */
-
-	virtual property& clear();
-
 public:
+
+	friend class properties;
+
 
 	/* Constructors, copy constructors and destructor */
 
 	property();
-
-	explicit property(string*);
-
-	property(string*, string*);
 
 	property(const property&);
 
@@ -54,6 +48,10 @@ public:
 
 
 	/* Accessor methods */
+
+	virtual const list<string>* comments() const;
+
+	virtual const string* inline_comment() const;
 
 	virtual bool is_valid() const;
 
@@ -68,6 +66,14 @@ public:
 
 
 	/* Generic methods */
+
+	virtual const string* comment(u32) const;
+
+	virtual u32 comment_count() const;
+
+	virtual property& empty();
+
+	virtual bool is_empty() const;
 };
 
 }

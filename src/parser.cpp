@@ -20,7 +20,7 @@ style *parser::s_fallback = NULL;
  * @brief Library constructor
  *
  * @attention
- *	If an exception occurs, its details are printed to the standard output and
+ *	If an exception occurs, its details are printed to the standard error and
  *	the process exits
  */
 void parser::on_lib_load()

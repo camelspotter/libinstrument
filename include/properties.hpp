@@ -7,20 +7,20 @@
 	@brief Class instrument::properties definition
 */
 
-#include "./string.hpp"
+#include "./property.hpp"
 
 namespace instrument {
 
 /**
-	@brief
+	@brief A collection of properties loaded from a .properties file
 */
-class properties: virtual public object
+class properties: virtual public list<property>
 {
 protected:
 
 	/* Protected variables */
 
-	pid_t m_pid;												/**< @brief Process ID */
+	i8 *m_path;												/**< @brief Properties file path */
 
 public:
 
@@ -28,6 +28,8 @@ public:
 
 	properties();
 
+	explicit properties(const i8*);
+	
 	properties(const properties&);
 
 	virtual	~properties();
@@ -36,6 +38,8 @@ public:
 
 
 	/* Accessor methods */
+	
+	virtual const i8* path() const;
 
 
 	/* Operator overloading methods */
@@ -44,6 +48,10 @@ public:
 
 
 	/* Generic methods */
+	
+	virtual properties& deserialize();
+	
+	virtual properties& serialize();
 };
 
 }

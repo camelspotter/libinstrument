@@ -89,11 +89,11 @@ public:
 	*/
 	static const enum {
 
-		JOINED			= 0x3F,
-
 		BLINKING		= 0x01,		BOLD				= 0x02,		DIM					= 0x04,
 
-		HIDDEN			= 0x08,		INVERTED		= 0x10,		UNDERLINED 	= 0x20
+		HIDDEN			= 0x08,		INVERTED		= 0x10,		JOINED			= 0x3F,
+
+		UNDERLINED 	= 0x20
 
 	} vt100_attributes;
 

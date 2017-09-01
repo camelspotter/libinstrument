@@ -7,15 +7,10 @@
 	@brief Class instrument::dictionary definition
 */
 
-#include "./string.hpp"
 #include "./list.hpp"
+#include "./string.hpp"
 
 namespace instrument {
-
-#define REGEXP_LOOKUP_MODE	true
-
-#define SIMPLE_LOOKUP_MODE	false
-
 
 /**
 	@brief A named collection of words (for syntax highlighters)

@@ -58,7 +58,8 @@ inline filter& filter::operator=(const filter &rval)
  * @throws instrument::exception
  */
 filter::filter(const i8 *expr, bool icase, bool mode):
-m_mode(mode)
+m_mode(mode),
+m_src_expr(NULL)
 {
 	util::memset(&m_expr, 0, sizeof(regex_t));
 	set_expr(expr, icase);
@@ -70,7 +71,21 @@ m_mode(mode)
  */
 filter::~filter()
 {
+	delete[] m_src_expr;
+	m_src_expr = NULL;
+
 	regfree(&m_expr);
+}
+
+
+/**
+ * @brief Get the filter (source) expression
+ *
+ * @returns this->m_src_expr
+ */
+inline const i8* filter::expr() const
+{
+	return m_src_expr;
 }
 
 
@@ -94,6 +109,7 @@ inline bool filter::mode() const
  *
  * @returns *this
  *
+ * @throws std::bad_alloc
  * @throws instrument::exception
  */
 filter& filter::set_expr(const i8 *expr, bool icase)
@@ -101,6 +117,15 @@ filter& filter::set_expr(const i8 *expr, bool icase)
 	if ( unlikely(expr == NULL) ) {
 		throw exception("invalid argument: expr (=%p)", expr);
 	}
+
+	u32 sz = strlen(expr);
+	if ( likely(m_src_expr == NULL || sz > strlen(m_src_expr)) ) {
+		delete[] m_src_expr;
+		m_src_expr = NULL;
+		m_src_expr = new i8[sz + 1];
+	}
+
+	strcpy(m_src_expr, expr);
 
 	regfree(&m_expr);
 	i32 flags = REG_EXTENDED | REG_NOSUB;
@@ -113,6 +138,9 @@ filter& filter::set_expr(const i8 *expr, bool icase)
 	if ( likely(retval == 0) ) {
 		return *this;
 	}
+
+	delete[] m_src_expr;
+	m_src_expr = NULL;
 
 	/* If the expression compilation failed */
 	i32 len = regerror(retval, &m_expr, NULL, 0);

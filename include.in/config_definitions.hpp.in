@@ -40,14 +40,19 @@ namespace instrument {
 #define THREAD_INIT					0x01
 
 /**
+	@brief Thread executing code before main
+*/
+#define THREAD_PREENTRY			0x02
+
+/**
 	@brief Thread started
 */
-#define THREAD_START				0x02
+#define THREAD_START				0x04
 
 /**
 	@brief Thread finalized and exited
 */
-#define THREAD_EXIT					0x04
+#define THREAD_EXIT					0x08
 
 
 /*
@@ -149,6 +154,25 @@ namespace instrument {
 
 
 /*
+	Filter definitions
+*/
+
+#ifdef WITH_FILTER
+
+/**
+	@brief Filter whole modules (filter path)
+*/
+#define MODULE_FILTER				false
+
+/**
+	@brief Filter functions/methods
+*/
+#define SYMBOL_FILTER				true
+
+#endif
+
+
+/*
 	Syntax highlighter definitions
 */
 
@@ -183,6 +207,39 @@ namespace instrument {
 	@brief Highlighter color for C++ function names
 */
 #define HLT_FUNCTION_FG			214
+
+/**
+	@brief Dictionary lookup mode (regular expression)
+*/
+#define REGEXP_LOOKUP_MODE	true
+
+/**
+	@brief Dictionary lookup mode (plain)
+*/
+#define SIMPLE_LOOKUP_MODE	false
+
+#endif
+
+
+/*
+	Stream related definitions
+*/
+
+#ifdef WITH_STREAM_FILE
+
+/**
+	@brief File creation default permission mask (rw-r--r--)
+*/
+#define DEFAULT_UMASK				0644
+
+#endif
+
+#ifdef WITH_STREAM_STTY
+
+/**
+	@brief Serial tty default baud rate
+*/
+#define DEFAULT_BAUD				9600
 
 #endif
 

@@ -11,9 +11,6 @@
 
 namespace instrument {
 
-#define DEFAULT_BAUD 9600
-
-
 /**
 	@brief A buffered output stream for serial interfaces
 

@@ -15,7 +15,6 @@
 	variables (instrument::g_*) that provide the default library configuration
 
 	@todo Implement syscall wrappers for proper retval handling (replays)
-	@todo Create (from scratch) cmake hooks in config.h and children
 */
 namespace instrument {
 

@@ -127,7 +127,7 @@ inline dictionary& dictionary::set_mode(bool mode)
 
 
 /**
- * @brief Set the name
+ * @brief Set the dictionary name
  *
  * @param[in] nm the new name
  *

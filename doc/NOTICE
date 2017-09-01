@@ -1,10 +1,29 @@
+dictionary {
+	consider sorting
+
+	consider caching
+}
+
+
+file {
+	recode unique_id to return a new file object
+
+	add a specifier for a fixed length random string to unique_id
+}
+
+
+filter {
+	ready to make copyable
+}
+
+
 generic {
 	study and finalize license
 
 	consider inter-collection methods (join, intersect, add)
 
 	research converting types to immutables (more expensive, easier to use)
-	
+
 	check UNIX, Cygwin, MinGW, Android Linux portability
 }
 
@@ -16,6 +35,16 @@ object {
 
 list {
 	consider providing sorting
+}
+
+
+plugin {
+	transform to interceptor, either by renaming or subclassing
+}
+
+
+stream {
+	consider adding method try_lock
 }
 
 
@@ -32,15 +61,33 @@ string {
 }
 
 
+style {
+	ensure proper use of exit escape sequence
+}
+
+
 symtab {
 	sort the table by address and implement binary lookup
 }
 
 
+tcp_socket {
+	consider adding domain name lookup (getaddrinfo will also resolve IPv4 vs IPv6)
+
+	implement connection drop detection (SO_KEEPALIVE, SIGPIPE)
+
+	fine tune socket options (buffer size, linger, no-delay e.t.c)
+
+	test TCP_NODELAY option or other means to flush cached network data
+
+	exploit shutdown on close
+}
+
+
 thread {
 	use std::thread (at least C++11) class for portability
-	
+
 	find a way to obtain current call arguments
-	
+
 	store the entry method (to detect thread exit)
 }

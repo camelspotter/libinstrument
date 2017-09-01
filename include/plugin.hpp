@@ -36,6 +36,8 @@ namespace instrument {
 	libinstrument functions) must <b>NOT</b> be instrumented by libinstrument, as
 	this will result in a recurse and a stack overflow
 
+	@todo Transform to interceptor, either by renaming or subclassing
+
 	@see tracer::register_plugin, tracer::unregister_plugin
 	@see
 		<a href="index.html#sec5_6">

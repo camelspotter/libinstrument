@@ -9,9 +9,6 @@
 
 namespace instrument {
 
-#define DEFAULT_UMASK 0644
-
-
 /**
  * @brief
  *	Create a unique ID based on process identifiers arranged as indicated by a
@@ -250,6 +247,9 @@ file& file::flush()
 			strerror(err)
 		);
 	}
+	catch (...) {
+		throw;
+	}
 }
 
 
@@ -357,7 +357,13 @@ file& file::resize(u32 sz)
 	while ( unlikely(retval < 0 && (errno == EINTR || errno == EAGAIN)) );
 
 	if ( unlikely(retval < 0) ) {
-		throw errno;
+		throw exception(
+			"failed to resize file '%s' to %d bytes (errno %d - %s)",
+			m_path,
+			sz,
+			errno,
+			strerror(errno)
+		);
 	}
 
 	return *this;
@@ -378,6 +384,7 @@ file& file::resize(u32 sz)
 file& file::seek_to(i32 offset, bool rel)
 {
 	i32 whence = (unlikely(rel)) ? SEEK_CUR : SEEK_SET;
+
 	i32 retval = lseek(m_handle, offset, whence);
 	if ( unlikely(retval < 0) ) {
 		throw exception(

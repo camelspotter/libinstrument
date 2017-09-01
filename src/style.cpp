@@ -225,13 +225,15 @@ style& style::operator=(const style &rval)
  * @throws std::bad_alloc
  * @throws instrument::exception
  */
-inline style& style::apply(string &dst) const
+style& style::apply(string &dst) const
 {
-	string esc;
-	to_string(esc);
+	if ( likely(dst.length() > 0) ) {
+		string esc;
+		to_string(esc);
 
-	dst.insert(0, esc)
-		 .append("\e[0m");
+		dst	.insert(0, esc)
+				.append("\e[0m");
+	}
 
 	return const_cast<style&> (*this);
 }
@@ -282,6 +284,7 @@ inline style& style::set_attr_enabled(attrset_t set, bool how)
  * @throws std::bad_alloc
  * @throws instrument::exception
  *
+ * @todo Check if for any style, an exit sequense is needed
  * @attention Initial string contents are erased
  */
 style& style::to_string(string &dst) const
