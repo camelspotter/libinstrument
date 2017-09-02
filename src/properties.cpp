@@ -48,6 +48,13 @@ try:
 list<property>(1, true),
 m_path(NULL)
 {
+	u32 len = strlen(path);
+	bool relative = false;
+	if ( unlikely(len > 0 && path[0]!= '/')) {
+		relative = true;
+		len += strlen(util::prefix()) + 2;
+	}
+	
 	m_path = new i8[strlen(path) + 1];
 	strcpy(m_path, path);
 }
