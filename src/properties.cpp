@@ -41,6 +41,7 @@ catch (...) {
  * @brief Object constructor
  *
  * @throws std::bad_alloc
+ * @todo Detect relative paths and use the installation prefix 
  */
 properties::properties(const i8 *path)
 try:
@@ -236,6 +237,8 @@ properties& properties::deserialize()
 		for (u32 i = 0, sz = lines->size(); likely(i < sz); i++) {
 			string *line = lines->at(i);
 			line->trim();
+			
+			
 			
 			cnt++;
 			std::cout << *line << "\n";
