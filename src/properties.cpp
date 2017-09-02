@@ -157,6 +157,8 @@ properties& properties::operator=(const properties &rval)
  *
  * @returns *this
  *
+ * @todo Implement this
+ *
  * @throws std::bad_alloc
  * @throws instrument::exception
  */
@@ -227,7 +229,7 @@ properties& properties::deserialize()
 	}
 
 	chain<string> *lines = NULL;
-	i32 cnt = 0;
+	i32 cnt = 0;property *current = new property();
 
 	/* If an exception occurs, unmap/close the file, clean up and rethrow it */
 	try {
@@ -238,8 +240,8 @@ properties& properties::deserialize()
 			string *line = lines->at(i);
 			line->trim();
 			
-			
-			
+			i32 index = line->index_of("#");
+			if ( unlikely(index == 0)) {line->at(0) = '';						
 			cnt++;
 			std::cout << *line << "\n";
 		}
