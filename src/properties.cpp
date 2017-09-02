@@ -241,7 +241,30 @@ properties& properties::deserialize()
 			line->trim();
 			
 			i32 index = line->index_of("#");
-			if ( unlikely(index == 0)) {line->at(0) = '';						
+			if ( unlikely(index == 0)) {
+				line->at(0) = '';
+				line->trim();
+				current->comments->add(line);
+				contunue;
+			}
+			else if ( unlikely(index > 0)) {
+				string *ic = line->substring(index, line->length());
+				ic->at(0) = '';
+				ic->trim();
+				line->crop(index);
+				line->trim();
+				current->inline_comment = ic;
+			} 
+			
+			index = line->index_of("=");
+			if ( unlikely(index < 0)) { 
+				current->key = line;
+				current = NULL;
+				current = new property();
+				continue;
+			} 
+			
+			
 			cnt++;
 			std::cout << *line << "\n";
 		}
