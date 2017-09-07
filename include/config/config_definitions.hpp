@@ -17,17 +17,17 @@ namespace instrument {
 /**
 	@brief Trim leading whitespace only
 */
-#define TRIM_LEADING				-1
+#define TRIM_LEADING						-1
 
 /**
 	@brief Trim trailing whitespace only
 */
-#define TRIM_TRAILING				1
+#define TRIM_TRAILING						1
 
 /**
 	@brief Trim both leading and trailing whitespace
 */
-#define TRIM_ALL						0
+#define TRIM_ALL								0
 
 
 /*
@@ -37,22 +37,38 @@ namespace instrument {
 /**
 	@brief Thread initialized but not started
 */
-#define THREAD_INIT					0x01
+#define THREAD_INIT							0x01
 
 /**
 	@brief Thread executing code before main
 */
-#define THREAD_PREENTRY			0x02
+#define THREAD_PREENTRY					0x02
 
 /**
-	@brief Thread started
+	@brief Thread started (entry function called)
 */
-#define THREAD_START				0x04
+#define THREAD_START						0x04
 
 /**
 	@brief Thread finalized and exited
 */
-#define THREAD_EXIT					0x08
+#define THREAD_EXIT							0x08
+
+
+/*
+	Property token validation
+*/
+
+/**
+	@brief Property key valid format regular expression
+*/
+#define PROPERTY_KEY_FORMAT			"^[a-zA-Z0-9_]{1,32}$"
+
+/**
+	@brief Property value valid format regular expression
+	@todo Add whitespace
+*/
+#define PROPERTY_VALUE_FORMAT		"^[\\\\a-zA-Z0-9_/\\t\\=\\:\\-]{1,256}$"
 
 
 /*
@@ -62,22 +78,22 @@ namespace instrument {
 /**
 	@brief Tag for error console messages
 */
-#define	ERROR_TAG						"[e]"
+#define	ERROR_TAG								"[e]"
 
 /**
 	@brief Tag for exception console messages
 */
-#define	EXCEPTION_TAG				"[x]"
+#define	EXCEPTION_TAG						"[x]"
 
 /**
 	@brief Tag for informational console messages
 */
-#define	INFO_TAG						"[i]"
+#define	INFO_TAG								"[i]"
 
 /**
 	@brief Tag for warning console messages
 */
-#define	WARNING_TAG					"[w]"
+#define	WARNING_TAG							"[w]"
 
 
 /*
@@ -89,37 +105,37 @@ namespace instrument {
 /**
 	@brief Error debug level
 */
-#define DBGL_ERROR		0x01
+#define DBGL_ERROR							0x01
 
 /**
 	@brief Warning debug level
 */
-#define DBGL_WARNING	0x02
+#define DBGL_WARNING						0x02
 
 /**
 	@brief Generic debug level
 */
-#define DBGL_INFO			0x04
+#define DBGL_INFO								0x04
 
 /**
 	@brief Low debug level (only errors)
 */
-#define DBGL_LOW			(DBGL_ERROR)
+#define DBGL_LOW								(DBGL_ERROR)
 
 /**
 	@brief Medium debug level (errors and warnings)
 */
-#define DBGL_MEDIUM		(DBGL_LOW | DBGL_WARNING)
+#define DBGL_MEDIUM							(DBGL_LOW | DBGL_WARNING)
 
 /**
 	@brief High debug level (all messages)
 */
-#define DBGL_HIGH			(DBGL_MEDIUM | DBGL_INFO)
+#define DBGL_HIGH								(DBGL_MEDIUM | DBGL_INFO)
 
 /**
 	@brief Selected debug level
 */
-#define DBG_LEVEL			DBGL_HIGH
+#define DBG_LEVEL								DBGL_HIGH
 
 #endif
 
@@ -133,22 +149,22 @@ namespace instrument {
 /**
 	@brief Tag color for error and exception messages
 */
-#define ERROR_TAG_FG				9
+#define ERROR_TAG_FG						9
 
 /**
 	@brief Tag color for error and exception messages
 */
-#define EXCEPTION_TAG_FG		196
+#define EXCEPTION_TAG_FG				196
 
 /**
 	@brief Tag color for informational messages
 */
-#define INFO_TAG_FG					61
+#define INFO_TAG_FG							61
 
 /**
 	@brief Tag color for warning messages
 */
-#define WARNING_TAG_FG			202
+#define WARNING_TAG_FG					202
 
 #endif
 
@@ -162,12 +178,12 @@ namespace instrument {
 /**
 	@brief Filter whole modules (filter path)
 */
-#define MODULE_FILTER				false
+#define MODULE_FILTER						false
 
 /**
-	@brief Filter functions/methods
+	@brief Filter functions/methods (filter function signature)
 */
-#define SYMBOL_FILTER				true
+#define SYMBOL_FILTER						true
 
 #endif
 
@@ -181,42 +197,42 @@ namespace instrument {
 /**
 	@brief Highlighter color for numbers (any base)
 */
-#define HLT_NUMBER_FG				208
+#define HLT_NUMBER_FG						208
 
 /**
 	@brief Highlighter color for C++ keywords
 */
-#define HLT_KEYWORD_FG			61
+#define HLT_KEYWORD_FG					61
 
 /**
 	@brief Highlighter color for C++ intrinsic types
 */
-#define HLT_TYPE_FG					105
+#define HLT_TYPE_FG							105
 
 /**
 	@brief Highlighter color for C++ files
 */
-#define HLT_FILE_FG					13
+#define HLT_FILE_FG							13
 
 /**
 	@brief Highlighter color for C++ ABI scopes
 */
-#define HLT_SCOPE_FG				250
+#define HLT_SCOPE_FG						250
 
 /**
 	@brief Highlighter color for C++ function names
 */
-#define HLT_FUNCTION_FG			214
+#define HLT_FUNCTION_FG					214
 
 /**
 	@brief Dictionary lookup mode (regular expression)
 */
-#define REGEXP_LOOKUP_MODE	true
+#define REGEXP_LOOKUP_MODE			true
 
 /**
 	@brief Dictionary lookup mode (plain)
 */
-#define SIMPLE_LOOKUP_MODE	false
+#define SIMPLE_LOOKUP_MODE			false
 
 #endif
 
@@ -230,7 +246,7 @@ namespace instrument {
 /**
 	@brief File creation default permission mask (rw-r--r--)
 */
-#define DEFAULT_UMASK				0644
+#define DEFAULT_UMASK						0644
 
 #endif
 
@@ -239,7 +255,7 @@ namespace instrument {
 /**
 	@brief Serial tty default baud rate
 */
-#define DEFAULT_BAUD				9600
+#define DEFAULT_BAUD						9600
 
 #endif
 

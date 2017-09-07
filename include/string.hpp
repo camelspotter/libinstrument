@@ -102,37 +102,72 @@ public:
 
 	/* Generic methods */
 
+	/* Data manipulation */
+
 	virtual string& append(const string&);
 
 	virtual string& append(const i8*, ...);
 
 	virtual string& append(i8);
 
-	virtual u32 available() const;
-
 	virtual string& clear();
 
-	virtual string& clip(u32);
-
-	virtual i32 compare(const string&, bool = false) const;
-
-	virtual bool equals(const string&, bool = false) const;
+	virtual string& crop(u32);
 
 	virtual string& insert(u32, const string&);
 
 	virtual string& insert(u32, const i8*, ...);
 
-	virtual bool match(const string&, bool = false) const;
-
 	virtual string& reduce(u32, u32);
 
 	virtual string& shred(u8 = 0);
 
+	virtual string& trim(i32 = TRIM_ALL);
+
+
+	/* Query */
+
+	virtual u32 available() const;
+
+	virtual i32 compare(const string&, bool = false) const;
+
+	virtual i32 compare(const i8*, bool = false) const;
+
+	virtual bool ends_with(const string&) const;
+
+	virtual bool ends_with(const i8*) const;
+
+	virtual bool equals(const string&, bool = false) const;
+
+	virtual bool equals(const i8*, bool = false) const;
+
+	virtual bool is_empty() const;
+
+	virtual bool starts_with(const string&) const;
+
+	virtual bool starts_with(const i8*) const;
+
+
+	/* Search */
+
+	virtual i32 index_of(const string&) const;
+
+	virtual i32 index_of(const i8*) const;
+
+	virtual i32 index_of(i8) const;
+
+	virtual bool match(const string&, bool = false) const;
+
+	virtual bool match(const i8*, bool = false) const;
+
+
+	/* Slicing */
+
 	virtual chain<string>* split(const string&, bool = true, bool = false) const;
 
-	virtual string* substring(u32 = 0, u32 = 0, bool = false);
+	virtual chain<string>* split(const i8*, bool = true, bool = false) const;
 
-	virtual string& trim(i32 = TRIM_ALL);
+	virtual string* substring(u32 = 0, u32 = 0, bool = false);
 };
 
 }

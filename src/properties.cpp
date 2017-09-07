@@ -9,6 +9,34 @@
 
 namespace instrument {
 
+/*
+	A chain<string> callback, to trim each entry
+*/
+void __trim_chain_callback(u32 index, string *item)
+{
+	item->trim();
+}
+
+
+/**
+ * @brief Free all object resources
+ *
+ * @returns *this
+ */
+properties& properties::destroy()
+{
+	clear();
+
+	delete[] m_data;
+	delete[] m_path;
+
+	m_data = NULL;
+	m_path = NULL;
+
+	return *this;
+}
+
+
 /**
  * @brief Object default constructor
  *
@@ -19,53 +47,35 @@ try:
 list<property>(1, true),
 m_path(NULL)
 {
-	u32 prefix_len = strlen(util::prefix()); 
+	u32 prefix_len = strlen(util::prefix());
 	m_path = new i8[prefix_len + strlen(g_properties_path) + 2];
-	
+
 	strcpy(m_path, util::prefix());
 	strcpy(m_path + prefix_len, "/");
 	strcpy(m_path + prefix_len + 1, g_properties_path);
 }
 catch (...) {
-	clear();
-	
-	delete[] m_data;
-	delete[] m_path;
-	
-	m_data = NULL;
-	m_path = NULL;
+	destroy();
 }
 
 
 /**
  * @brief Object constructor
  *
+ * @param[in] path the .properties file path (used as is)
+ *
  * @throws std::bad_alloc
- * @todo Detect relative paths and use the installation prefix 
  */
 properties::properties(const i8 *path)
 try:
 list<property>(1, true),
 m_path(NULL)
 {
-	u32 len = strlen(path);
-	bool relative = false;
-	if ( unlikely(len > 0 && path[0]!= '/')) {
-		relative = true;
-		len += strlen(util::prefix()) + 2;
-	}
-	
 	m_path = new i8[strlen(path) + 1];
 	strcpy(m_path, path);
 }
 catch (...) {
-	clear();
-	
-	delete[] m_data;
-	delete[] m_path;
-	
-	m_data = NULL;
-	m_path = NULL;
+	destroy();
 }
 
 
@@ -85,13 +95,7 @@ m_path(NULL)
 	strcpy(m_path, src.m_path);
 }
 catch (...) {
-	clear();
-	
-	delete[] m_data;
-	delete[] m_path;
-	
-	m_data = NULL;
-	m_path = NULL;
+	destroy();
 }
 
 
@@ -148,7 +152,7 @@ properties& properties::operator=(const properties &rval)
 	list::operator=(rval);
 
 	u32 len = strlen(rval.m_path);
-	if ( likely (len > strlen(m_path)) ) {
+	if ( likely(len > strlen(m_path)) ) {
 		delete[] m_path;
 		m_path = NULL;
 		m_path = new i8[len + 1];
@@ -163,8 +167,6 @@ properties& properties::operator=(const properties &rval)
  * @brief Deserialize the properties file
  *
  * @returns *this
- *
- * @todo Implement this
  *
  * @throws std::bad_alloc
  * @throws instrument::exception
@@ -235,89 +237,105 @@ properties& properties::deserialize()
 		);
 	}
 
+	u32 cnt = 0;
+	property *current = NULL;
 	chain<string> *lines = NULL;
-	i32 cnt = 0;property *current = new property();
 
 	/* If an exception occurs, unmap/close the file, clean up and rethrow it */
 	try {
-		string text(reinterpret_cast<i8*> (mmap_base));		
-		lines = text.split("\n");
-		
-		for (u32 i = 0, sz = lines->size(); likely(i < sz); i++) {
+		current = new property();
+
+		string text(reinterpret_cast<i8*> (mmap_base));
+		lines = text.split("\r?\n");
+
+		for (u32 i = 0, linecnt = lines->size(); likely(i < linecnt); i++) {
 			string *line = lines->at(i);
 			line->trim();
-			
-			i32 index = line->index_of("#");
-			if ( unlikely(index == 0)) {
-				line->at(0) = '';
-				line->trim();
-				current->comments->add(line);
-				contunue;
-			}
-			else if ( unlikely(index > 0)) {
-				string *ic = line->substring(index, line->length());
-				ic->at(0) = '';
-				ic->trim();
-				line->crop(index);
-				line->trim();
-				current->inline_comment = ic;
-			} 
-			
-			index = line->index_of("=");
-			if ( unlikely(index < 0)) { 
-				current->key = line;
-				current = NULL;
-				current = new property();
+
+			if ( unlikely(line->is_empty()) ) {
 				continue;
-			} 
-			
-			
-			cnt++;
-			std::cout << *line << "\n";
-		}
-		
-		delete lines;
+			}
 
-		/* i32 bytes = sz;
-		i8 *offset, *cur;
-		offset = cur = static_cast<i8*> (mmap_base);
+			i32 index = line->index_of("#");
 
-		/ Load the dictionary words /
-		while ( likely(bytes-- > 0) ) {
-			if ( unlikely(*cur == '\n') ) {
-				if ( likely(cur != offset) ) {
-					word = new string("%.*s", cur - offset, offset);
-					word->trim();
+			/* Line-spaning comment detection */
+			if ( unlikely(index == 0) ) {
+				line->at(0) = ' ';
+				line->trim();
 
-					if ( unlikely(word->length() == 0) ) {
-						delete word;
-					}
-					else {
-						cnt++;
-						//add(word);
-					}
-
-					word = NULL;
+				if ( likely(!line->is_empty()) ) {
+					current->m_comments->add(line);
 				}
 
-				offset = ++cur;
+				if ( unlikely(line->index_of("=") >= 0) ) {
+					cnt++;
+					add(current);
+					current = NULL;
+					current = new property();
+				}
+
+				continue;
 			}
-			else {
-				++cur;
+
+			/* Inline comment detection */
+			if ( unlikely(index > 0) ) {
+				string *comment = line->substring(index, line->length());
+				comment->at(0) = ' ';
+				comment->trim();
+
+				if ( likely(!comment->is_empty()) ) {
+					current->m_inline_comment = comment;
+				}
+
+				line->crop(index);
+				line->trim();
 			}
-		} */
+
+			/* Parse token key and value */
+			chain<string> *parts = line->split("=");
+			parts->each(__trim_chain_callback);
+
+			u32 partcnt = parts->size();
+			if ( likely(partcnt >= 1) ) {
+				current->m_name = parts->at(0);
+			}
+
+			if ( likely(partcnt >= 2) ) {
+				current->m_value = parts->at(1);
+
+				for (u32 j = 2; likely(j < partcnt); j++) {
+					current->m_value->append("=");
+					current->m_value->append(*parts->at(j));
+				}
+			}
+
+			if ( likely(!current->is_empty()) ) {
+				cnt++;
+				add(current);
+				current = NULL;
+				current = new property();
+			}
+		}
+
+		lines->detach_all();
+		delete lines;
+		delete current;
 	}
 	catch (...) {
+		lines->detach_all();
+
+		delete current;
 		delete lines;
+
 		munmap(mmap_base, sz);
 		close(fd);
+
 		throw;
 	}
 
 	munmap(mmap_base, sz);
 	close(fd);
 
-#if DBG_LEVEL & DBGL_INFO
 	if ( likely(cnt > 0) ) {
 		util::dbg_info(
 			"properties file '%s' loaded, %d token%s",
@@ -329,14 +347,71 @@ properties& properties::deserialize()
 	else {
 		util::dbg_info("properties file '%s' is empty", m_path);
 	}
-#endif
 
 	return *this;
 }
 
 
+/**
+ * @brief Serialize to the properties file
+ *
+ * @returns *this
+ *
+ * @throws std::bad_alloc
+ * @throws instrument::exception
+ *
+ * @todo Now serializes to console, implement print-to-file
+ */
 properties& properties::serialize()
 {
+	string buffer;
+
+	for (u32 i = 0; likely(i < m_size); i++) {
+		const property *p = m_data[i];
+
+		/* Serialize multi-line comments */
+		for (u32 j = 0, sz = p->m_comments->size(); likely(j < sz); j++) {
+			buffer.append("#")
+						.append(*p->m_comments->at(j))
+						.append("\n");
+		}
+
+		if ( unlikely(p->m_name == NULL && p->m_value == NULL) ) {
+			buffer.append("\n");
+			continue;
+		}
+
+		/* Invalid token marker */
+		if ( likely(!p->validate()) ) {
+			buffer.append("## ");
+		}
+
+		/* Serialize token */
+		string *s = p->m_name;
+		if ( likely(s != NULL && !s->is_empty()) ) {
+			buffer.append(*s);
+		}
+
+		buffer.append(" = ");
+
+		s = p->m_value;
+		if ( likely(s != NULL && !s->is_empty()) ) {
+			buffer.append(*s);
+		}
+
+		s = p->m_inline_comment;
+		if ( likely(s != NULL && !s->is_empty()) ) {
+			buffer.append(" #")
+						.append(*s);
+		}
+
+		buffer.append("\n\n");
+	}
+
+	/* Serialize to console */
+	std::cout	<< buffer
+						<< std::endl;
+
 	return *this;
 }
 

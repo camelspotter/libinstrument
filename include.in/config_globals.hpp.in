@@ -19,6 +19,8 @@ static const codepage_t g_codepages[] = {
 
 	"iso-8859-1",
 
+	"iso-8859-7"
+
 };
 
 /**

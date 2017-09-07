@@ -87,6 +87,8 @@ public:
 
 	virtual T* detach(u32);
 
+	virtual chain& detach_all();
+
 	virtual chain& each(const callback_t) const;
 
 	virtual chain& remove(u32);
@@ -455,6 +457,27 @@ inline T* chain<T>::detach(u32 i)
 	T *d = n->detach();
 	delete n;
 	return d;
+}
+
+
+/**
+ * @brief Detach all nodes
+ *
+ * @returns *this
+ */
+template <class T>
+chain<T>& chain<T>::detach_all()
+{
+	node<T> *cur = m_head, *prev = NULL, *next;
+	while ( likely(cur != NULL) ) {
+		next = cur->link(prev);
+		prev = cur;
+
+		cur->detach();
+		cur = next;
+	}
+
+	return *this;
 }
 
 

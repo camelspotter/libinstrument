@@ -91,6 +91,8 @@ public:
 
 	virtual T* detach(u32);
 
+	virtual list& detach_all();
+
 	virtual list& each(const callback_t) const;
 
 	virtual list& remove(u32);
@@ -437,6 +439,23 @@ T* list<T>::detach(u32 i)
 
 	m_size--;
 	return d;
+}
+
+
+/**
+ * @brief Detach all items
+ *
+ * @returns *this
+ */
+template <class T>
+list<T>& list<T>::detach_all()
+{
+	for (u32 i = 0; likely(i < m_size); i++) {
+		m_data[i] = NULL;
+	}
+
+	m_size = 0;
+	return *this;
 }
 
 

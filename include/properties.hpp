@@ -22,6 +22,11 @@ protected:
 
 	i8 *m_path;												/**< @brief Properties file path */
 
+
+	/* Protected generic methods */
+
+	virtual properties& destroy();
+
 public:
 
 	/* Constructors, copy constructors and destructor */
@@ -29,7 +34,7 @@ public:
 	properties();
 
 	explicit properties(const i8*);
-	
+
 	properties(const properties&);
 
 	virtual	~properties();
@@ -38,7 +43,7 @@ public:
 
 
 	/* Accessor methods */
-	
+
 	virtual const i8* path() const;
 
 
@@ -48,9 +53,9 @@ public:
 
 
 	/* Generic methods */
-	
+
 	virtual properties& deserialize();
-	
+
 	virtual properties& serialize();
 };
 

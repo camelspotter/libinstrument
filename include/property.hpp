@@ -21,11 +21,9 @@ protected:
 
 	/* Protected variables */
 
-	list<string> *m_comments;
+	list<string> *m_comments;							/**< @brief Prepending comments */
 
-	string *m_inline_comment;
-
-	bool m_invalid;
+	string *m_inline_comment;							/**< @brief Single inline comment */
 
 	string *m_name;												/**< @brief Property name */
 
@@ -53,8 +51,6 @@ public:
 
 	virtual const string* inline_comment() const;
 
-	virtual bool is_valid() const;
-
 	virtual const string* name() const;
 
 	virtual const string* value() const;
@@ -67,13 +63,11 @@ public:
 
 	/* Generic methods */
 
-	virtual const string* comment(u32) const;
-
-	virtual u32 comment_count() const;
-
 	virtual property& empty();
 
 	virtual bool is_empty() const;
+
+	virtual bool validate() const;
 };
 
 }

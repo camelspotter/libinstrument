@@ -16,7 +16,6 @@ namespace instrument {
 property::property():
 m_comments(NULL),
 m_inline_comment(NULL),
-m_invalid(false),
 m_name(NULL),
 m_value(NULL)
 {
@@ -35,7 +34,6 @@ property::property(const property &src)
 try:
 m_comments(NULL),
 m_inline_comment(NULL),
-m_invalid(src.m_invalid),
 m_name(NULL),
 m_value(NULL)
 {
@@ -91,17 +89,6 @@ inline const string* property::inline_comment() const
 
 
 /**
- * @brief Check if the property is valid (format, type, complete)
- *
- * @returns !this->m_invalid
- */
-inline bool property::is_valid() const
-{
-	return !m_invalid;
-}
-
-
-/**
  * @brief Get the property name
  *
  * @returns this->m_name
@@ -138,54 +125,51 @@ property& property::operator=(const property &rval)
 		return *this;
 	}
 
-	if ( likely(rval.m_comments != NULL) ) {
+	/* Copy multi-line comments */
+	if ( unlikely(m_comments == NULL) ) {
 		m_comments = rval.m_comments->clone();
 	}
+	else {
+		*m_comments = *rval.m_comments;
+	}
 
-	if ( unlikely(rval.m_inline_comment != NULL) ) {
+	/* Copy inline comment */
+	if ( likely(rval.m_inline_comment == NULL) ) {
+		delete m_inline_comment;
+		m_inline_comment = NULL;
+	}
+	else if ( likely(m_inline_comment == NULL) ) {
 		m_inline_comment = rval.m_inline_comment->clone();
 	}
+	else {
+		*m_inline_comment = *rval.m_inline_comment;
+	}
 
-	if ( likely(rval.m_name != NULL) ) {
+	/* Copy name */
+	if ( unlikely(rval.m_name == NULL) ) {
+		delete m_name;
+		m_name = NULL;
+	}
+	else if ( unlikely(m_name == NULL) ) {
 		m_name = rval.m_name->clone();
 	}
+	else {
+		*m_name = *rval.m_name;
+	}
 
-	if ( likely(rval.m_value != NULL) ) {
+	/* Copy value */
+	if ( unlikely(rval.m_value == NULL) ) {
+		delete m_value;
+		m_value = NULL;
+	}
+	else if ( unlikely(m_value == NULL) ) {
 		m_value = rval.m_value->clone();
 	}
-
-	m_invalid = rval.m_invalid;
-	return *this;
-}
-
-
-/**
- * @brief Get the i-th comment
- *
- * @param[in] i the comment index
- *
- * @returns this->m_comments->at(i)
- *
- * @throws instrument::exception
- */
-inline const string* property::comment(u32 i) const
-{
-	if ( likely(m_comments == NULL) ) {
-		throw exception("offset out of list bounds (%d >= 0)", i);
+	else {
+		*m_value = *rval.m_value;
 	}
 
-	return m_comments->at(i);
-}
-
-
-/**
- * @brief Get the number of comments
- *
- * @returns this->m_comments->size()
- */
-inline u32 property::comment_count() const
-{
-	return m_comments->size();
+	return *this;
 }
 
 
@@ -202,10 +186,9 @@ property& property::empty()
 	delete m_value;
 
 	m_comments = NULL;
-	m_inline_comment = NULL;
-	m_name = NULL;
-	m_value = NULL;
+	m_inline_comment = m_name = m_value = NULL;
 
+	m_comments = new list<string>(1, true);
 	return *this;
 }
 
@@ -217,7 +200,46 @@ property& property::empty()
  */
 bool property::is_empty() const
 {
-	return false;
+	if ( unlikely(m_comments != NULL && m_comments->size() > 0) ) {
+		return false;
+	}
+
+	if ( unlikely(m_inline_comment != NULL && m_inline_comment->length() > 0) ) {
+		return false;
+	}
+
+	if ( unlikely(m_name != NULL && m_name->length() > 0) ) {
+		return false;
+	}
+
+	if ( unlikely(m_value != NULL && m_value->length() > 0) ) {
+		return false;
+	}
+
+	return true;
+}
+
+
+/**
+ * @brief Check if the property is valid
+ *
+ * @returns true if valid, false otherwise
+ */
+bool property::validate() const
+{
+	if ( unlikely(	m_name == NULL ||
+									m_name->length() == 0 ||
+									!m_name->match(PROPERTY_KEY_FORMAT)) ) {
+		return false;
+	}
+
+	if ( unlikely(	m_value == NULL ||
+									m_value->length() == 0 ||
+									!m_value->match(PROPERTY_VALUE_FORMAT)) ) {
+		return false;
+	}
+
+	return true;
 }
 
 }

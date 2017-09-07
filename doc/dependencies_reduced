@@ -12,21 +12,3 @@ snprintf()
 	fgetc()
 	ferror()
 }
-
-gcc built-ins {
-	__cplusplus
-	__x86_64__
-	__ppc64__
-	__GNUC__
-	extern "C" {}
-	__cyg_profile_func_enter()
-	__cyg_profile_func_exit()
-	__builtin_expect()
-	__builtin_prefetch()
-
-
-__attribute((constructor))
-__attribute((destructor))
-__attribute((noreturn))
-__FUNCTION__
-}

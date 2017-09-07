@@ -458,19 +458,6 @@ inline string& string::append(i8 ch)
 
 
 /**
- * @brief
- *	Get the available buffer size, the number of characters that can be appended
- *	without reallocation
- *
- * @returns this->m_size - (this->m_length + 1)
- */
-inline u32 string::available() const
-{
-	return m_size - m_length - 1;
-}
-
-
-/**
  * @brief Clear contents
  *
  * @returns *this
@@ -484,13 +471,13 @@ inline string& string::clear()
 
 
 /**
- * @brief Clip the string to a new length
+ * @brief Crop the string to a new length
  *
- * param[in] offset the clipping offset
+ * @param[in] offset the croping offset
  *
  * @returns *this
  */
-inline string& string::clip(u32 pffset)
+string& string::crop(u32 offset)
 {
 	if ( unlikely(offset >= m_length) ) {
 		return *this;
@@ -498,43 +485,8 @@ inline string& string::clip(u32 pffset)
 
 	m_data[offset] = '\0';
 	m_length = offset;
+
 	return *this;
-}
-
-
-/**
- * @brief Compare to another string
- *
- * @param[in] rval the compared string
- *
- * @param[in] icase true to ignore case sensitivity
- *
- * @returns
- *	<0, zero, or >0 if this is respectively less than, equal, or greater than
- *	the compared string, lexicographically
- */
-inline i32 string::compare(const string &rval, bool icase) const
-{
-	if ( unlikely(icase) ) {
-		return strcasecmp(m_data, rval.m_data);
-	}
-
-	return strcmp(m_data, rval.m_data);
-}
-
-
-/**
- * @brief Compare to another string for equality
- *
- * @param[in] rval the compared string
- *
- * @param[in] icase true to ignore case sensitivity
- *
- * @returns true if the strings are equal, false otherwise
- */
-inline bool string::equals(const string &rval, bool icase) const
-{
-	return compare(rval, icase) == 0;
 }
 
 
@@ -548,6 +500,7 @@ inline bool string::equals(const string &rval, bool icase) const
  * @returns *this
  *
  * @throws std::bad_alloc
+ * @throws instrument::exception
  */
 string& string::insert(u32 pos, const string &rval)
 {
@@ -609,48 +562,6 @@ string& string::insert(u32 pos, const i8 *fmt, ...)
 
 
 /**
- * @brief Match against a POSIX extended regular expression
- *
- * @param[in] expr the regular expression
- *
- * @param[in] icase true to ignore case sensitivity
- *
- * @returns true if there is a match, false otherwise
- *
- * @throws instrument::exception
- */
-bool string::match(const string &expr, bool icase) const
-{
-	i32 flags = REG_EXTENDED | REG_NOSUB;
-	if ( unlikely(icase) ) {
-		flags |= REG_ICASE;
-	}
-
-	/* Compile the regular expression and perform the matching */
-	regex_t regexp;
-	i32 retval = regcomp(&regexp, expr.cstring(), flags);
-	if ( likely(retval == 0) ) {
-		retval = regexec(&regexp, m_data, 0, NULL, 0);
-		regfree(&regexp);
-		return !retval;
-	}
-
-	/* If the expression compilation failed */
-	i32 len = regerror(retval, &regexp, NULL, 0);
-	i8 errbuf[len];
-	regerror(retval, &regexp, errbuf, len);
-	regfree(&regexp);
-
-	throw exception(
-		"failed to compile regexp '%s' (regex errno %d - %s)",
-		expr.cstring(),
-		retval,
-		errbuf
-	);
-}
-
-
-/**
  * @brief Remove a substring
  *
  * @param[in] from the substring start offset
@@ -658,8 +569,6 @@ bool string::match(const string &expr, bool icase) const
  * @param[in] len the substring length
  *
  * @returns *this
- *
- * @throws instrument::exception
  */
 string& string::reduce(u32 from, u32 len)
 {
@@ -667,15 +576,12 @@ string& string::reduce(u32 from, u32 len)
 		return *this;
 	}
 
-	if ( unlikely(len + from > m_length) ) {
-		return clip(from);
+	if ( unlikely(len + from >= m_length) ) {
+		return crop(from);
 	}
 
 	if ( unlikely(len == 0) ) {
 		return *this;
-	}
-	else if ( unlikely(len == m_length) ) {
-		return clear();
 	}
 
 	for (u32 i = from, j = from + len; likely(j <= m_length); i++, j++) {
@@ -704,6 +610,340 @@ inline string& string::shred(u8 ch)
 
 
 /**
+ * @brief Remove leading and/or trailing whitespace characters
+ *
+ * @param[in] which one of TRIM_LEADING, TRIM_TRAILING, TRIM_ALL (default)
+ *
+ * @returns *this
+ */
+string& string::trim(i32 which)
+{
+	if ( likely(which <= TRIM_ALL) ) {
+		/* Estimate the number of leading whitespace characters */
+		u32 i;
+		for (i = 0; likely(i < m_length); i++) {
+			if ( likely(!isspace(m_data[i])) ) {
+				break;
+			}
+		}
+
+		/* Remove them */
+		if ( unlikely(i > 0 && i < m_length) ) {
+			strcpy(m_data, m_data + i);
+			m_length -= i;
+		}
+
+		/* If the string is filled with whitespace characters */
+		else if ( unlikely(i == m_length) ) {
+			return clear();
+		}
+	}
+
+	if ( likely(which >= TRIM_ALL) ) {
+		/* Estimate the number of trailing whitespace characters */
+		i32 i;
+		for (i = m_length - 1; likely(i >= 0); i--) {
+			if ( likely(!isspace(m_data[i])) ) {
+				break;
+			}
+		}
+
+		m_data[++i] = '\0';
+		m_length = i;
+	}
+
+	return *this;
+}
+
+
+/**
+ * @brief
+ *	Get the available buffer size, the number of characters that can be appended
+ *	without reallocation
+ *
+ * @returns this->m_size - (this->m_length + 1)
+ */
+inline u32 string::available() const
+{
+	return m_size - m_length - 1;
+}
+
+
+/**
+ * @brief Compare to another string
+ *
+ * @param[in] rval the compared string
+ *
+ * @param[in] icase true to ignore case sensitivity
+ *
+ * @returns
+ *	<0, zero, or >0 if this is respectively less than, equal, or greater than
+ *	the compared string, lexicographically
+ */
+inline i32 string::compare(const string &rval, bool icase) const
+{
+	return compare(rval.m_data, icase);
+}
+
+
+/**
+ * @brief Compare to a C-string
+ *
+ * @param[in] rval the compared C-string
+ *
+ * @param[in] icase true to ignore case sensitivity
+ *
+ * @returns
+ *	<0, zero, or >0 if this is respectively less than, equal, or greater than
+ *	the compared string, lexicographically
+ *
+ * @throws instrument::exception
+ */
+i32 string::compare(const i8 *rval, bool icase) const
+{
+	if ( unlikely(rval == NULL) ) {
+		throw exception("invalid argument: rval (=%p)", rval);
+	}
+
+	if ( unlikely(icase) ) {
+		return strcasecmp(m_data, rval);
+	}
+
+	return strcmp(m_data, rval);
+}
+
+
+/**
+ * @brief Check if this string has a specific suffix
+ *
+ * @param[in] rval the suffix checked
+ *
+ * @returns true if this string has the specified suffix, false otherwise
+ */
+inline bool string::ends_with(const string &rval) const
+{
+	return ends_with(rval.m_data);
+}
+
+
+/**
+ * @brief Check if this string has a specific C-string suffix
+ *
+ * @param[in] rval the C-string suffix checked (can by NULL)
+ *
+ * @returns true if this string has the specified suffix, false otherwise
+ */
+bool string::ends_with(const i8 *rval) const
+{
+	__D_ASSERT(rval != NULL);
+	if ( unlikely(rval == NULL) ) {
+		return false;
+	}
+
+	i32 index = index_of(rval);
+	if ( likely(index < 0) ) {
+		return false;
+	}
+
+	return index + strlen(rval) == m_length;
+}
+
+
+/**
+ * @brief Compare to another string for equality
+ *
+ * @param[in] rval the compared string
+ *
+ * @param[in] icase true to ignore case sensitivity
+ *
+ * @returns true if the strings are equal, false otherwise
+ *
+ * @throws instrument::exception
+ */
+inline bool string::equals(const string &rval, bool icase) const
+{
+	return compare(rval, icase) == 0;
+}
+
+
+/**
+ * @brief Compare to a C-string for equality
+ *
+ * @param[in] rval the compared C-string
+ *
+ * @param[in] icase true to ignore case sensitivity
+ *
+ * @returns true if the strings are equal, false otherwise
+ *
+ * @throws instrument::exception
+ */
+inline bool string::equals(const i8 *rval, bool icase) const
+{
+	return compare(rval, icase) == 0;
+}
+
+
+/**
+ * @brief Check if the string is empty
+ *
+ * @returns true if the string is empty, false otherwise
+ */
+inline bool string::is_empty() const
+{
+	return m_length == 0;
+}
+
+
+/**
+ * @brief Check if this string has a specific prefix
+ *
+ * @param[in] rval the prefix checked
+ *
+ * @returns true if this string has the specified prefix, false otherwise
+ */
+inline bool string::starts_with(const string &rval) const
+{
+	return starts_with(rval.m_data);
+}
+
+
+/**
+ * @brief Check if this string has a specific C-string prefix
+ *
+ * @param[in] rval the C-string prefix checked (can be NULL)
+ *
+ * @returns true if this string has the specified prefix, false otherwise
+ */
+inline bool string::starts_with(const i8 *rval) const
+{
+	__D_ASSERT(rval != NULL);
+	if ( unlikely(rval == NULL) ) {
+		return false;
+	}
+
+	return index_of(rval) == 0;
+}
+
+
+/**
+ * @brief Find the offset of a substring
+ *
+ * @param[in] rval the substring
+ *
+ * @returns the substring offset or -1 if the substring is not contained
+ */
+inline i32 string::index_of(const string &rval) const
+{
+	return index_of(rval.m_data);
+}
+
+
+/**
+ * @brief Find the offset of a substring
+ *
+ * @param[in] rval the substring (can be NULL)
+ *
+ * @returns the substring offset or -1 if the substring is not contained
+ */
+i32 string::index_of(const i8 *rval) const
+{
+	__D_ASSERT(rval != NULL);
+	if ( unlikely(rval == NULL) ) {
+		return -1;
+	}
+
+	i8 *index = strstr(m_data, rval);
+	if ( likely(index == NULL) ) {
+		return -1;
+	}
+
+	return index - m_data;
+}
+
+
+/**
+ * @brief Find the offset of the first occurence of a character
+ *
+ * @param[in] ch the searched character
+ *
+ * @returns the character offset or -1 if the character is not contained
+ */
+i32 string::index_of(i8 ch) const
+{
+	for (u32 i = 0; likely(i < m_length); i++) {
+		if ( unlikely(m_data[i] == ch) ) {
+			return static_cast<i32> (i);
+		}
+	}
+
+	return -1;
+}
+
+
+/**
+ * @brief Match against a POSIX extended regular expression
+ *
+ * @param[in] expr the regular expression
+ *
+ * @param[in] icase true to ignore case sensitivity
+ *
+ * @returns true if there is a match, false otherwise
+ *
+ * @throws instrument::exception
+ */
+inline bool string::match(const string &expr, bool icase) const
+{
+	return match(expr.cstring(), icase);
+}
+
+
+/**
+ * @brief Match against a POSIX extended regular expression
+ *
+ * @param[in] expr the regular expression C-string (can be NULL)
+ *
+ * @param[in] icase true to ignore case sensitivity
+ *
+ * @returns true if there is a match, false otherwise
+ *
+ * @throws instrument::exception
+ */
+bool string::match(const i8 *expr, bool icase) const
+{
+	if ( unlikely(expr == NULL) ) {
+		return false;
+	}
+
+	i32 flags = REG_EXTENDED | REG_NOSUB;
+	if ( unlikely(icase) ) {
+		flags |= REG_ICASE;
+	}
+
+	/* Compile the regular expression and perform the matching */
+	regex_t regexp;
+	i32 retval = regcomp(&regexp, expr, flags);
+	if ( likely(retval == 0) ) {
+		retval = regexec(&regexp, m_data, 0, NULL, 0);
+		regfree(&regexp);
+		return !retval;
+	}
+
+	/* If the expression compilation failed */
+	i32 len = regerror(retval, &regexp, NULL, 0);
+	i8 errbuf[len];
+	regerror(retval, &regexp, errbuf, len);
+	regfree(&regexp);
+
+	throw exception(
+		"failed to compile regexp '%s' (regex errno %d - %s)",
+		expr,
+		retval,
+		errbuf
+	);
+}
+
+
+/**
  * @brief Tokenize using a POSIX extended regular expression
  *
  * @param[in] expr the delimiter expression
@@ -717,8 +957,34 @@ inline string& string::shred(u8 ch)
  * @throws std::bad_alloc
  * @throws instrument::exception
  */
-chain<string>* string::split(const string &expr, bool imatch, bool icase) const
+inline chain<string>* string::split(	const string &expr,
+																			bool imatch,
+																			bool icase) const
 {
+	return split(expr.cstring(), imatch, icase);
+}
+
+
+/**
+ * @brief Tokenize using a POSIX extended regular expression
+ *
+ * @param[in] expr the delimiter expression C-string
+ *
+ * @param[in] imatch false to include the actual matches in the result
+ *
+ * @param[in] icase true to ignore case sensitivity
+ *
+ * @returns the list of tokens (heap allocated)
+ *
+ * @throws std::bad_alloc
+ * @throws instrument::exception
+ */
+chain<string>* string::split(const i8 *expr, bool imatch, bool icase) const
+{
+	if ( unlikely(expr == NULL) ) {
+		throw exception("invalid argument: expr (=%p)", expr);
+	}
+
 	chain<string> *tokens = NULL;
 	string *word = NULL;
 	regex_t regexp;
@@ -733,7 +999,7 @@ chain<string>* string::split(const string &expr, bool imatch, bool icase) const
 			flags |= REG_ICASE;
 		}
 
-		i32 retval = regcomp(&regexp, expr.cstring(), flags);
+		i32 retval = regcomp(&regexp, expr, flags);
 		if ( unlikely(retval != 0) ) {
 			i32 len = regerror(retval, &regexp, NULL, 0);
 			i8 errbuf[len];
@@ -741,7 +1007,7 @@ chain<string>* string::split(const string &expr, bool imatch, bool icase) const
 
 			throw exception(
 				"failed to compile regexp '%s' (regex errno %d - %s)",
-				expr.cstring(),
+				expr,
 				retval,
 				errbuf
 			);
@@ -764,9 +1030,7 @@ chain<string>* string::split(const string &expr, bool imatch, bool icase) const
 				i32 bgn = match.rm_so;
 				i32 end = match.rm_eo;
 				if ( unlikely(end == 0) ) {
-					throw exception(
-						"logic error in regular expression '%s'",
-						expr.cstring());
+					throw exception("logic error in regular expression '%s'", expr);
 				}
 
 				word = new string("%.*s", bgn, m_data + offset);
@@ -864,53 +1128,6 @@ string* string::substring(u32 from, u32 len, bool inplace)
 		delete[] substr;
 		throw;
 	}
-}
-
-
-/**
- * @brief Remove leading and/or trailing whitespace characters
- *
- * @param[in] which one of TRIM_LEADING, TRIM_TRAILING, TRIM_ALL (default)
- *
- * @returns *this
- */
-string& string::trim(i32 which)
-{
-	if ( likely(which <= TRIM_ALL) ) {
-		/* Estimate the number of leading whitespace characters */
-		u32 i;
-		for (i = 0; likely(i < m_length); i++) {
-			if ( likely(!isspace(m_data[i])) ) {
-				break;
-			}
-		}
-
-		/* Remove them */
-		if ( unlikely(i > 0 && i < m_length) ) {
-			strcpy(m_data, m_data + i);
-			m_length -= i;
-		}
-
-		/* If the string is filled with whitespace characters */
-		else if ( unlikely(i == m_length) ) {
-			return clear();
-		}
-	}
-
-	if ( likely(which >= TRIM_ALL) ) {
-		/* Estimate the number of trailing whitespace characters */
-		i32 i;
-		for (i = m_length - 1; likely(i >= 0); i--) {
-			if ( likely(!isspace(m_data[i])) ) {
-				break;
-			}
-		}
-
-		m_data[++i] = '\0';
-		m_length = i;
-	}
-
-	return *this;
 }
 
 }

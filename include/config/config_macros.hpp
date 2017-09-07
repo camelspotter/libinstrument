@@ -36,17 +36,22 @@
 /**
 	@brief Has thread initialized but not started
 */
-#define is_thread_initialized(x)	(x == THREAD_INIT)
+#define is_thread_initialized(x)	((x & THREAD_INIT) != 0)
+
+/**
+	@brief Has thread initialized but not started
+*/
+#define is_thread_preentry(x)			((x & THREAD_PREENTRY) != 0)
 
 /**
 	@brief Has thread initialized and started
 */
-#define is_thread_started(x)			(x == THREAD_START)
+#define is_thread_started(x)			((x & THREAD_START) != 0)
 
 /**
 	@brief Has thread finalized and exited
 */
-#define is_thread_finished(x)			(x == THREAD_EXIT)
+#define is_thread_finished(x)			((x & THREAD_EXIT) != 0)
 
 
 /*
@@ -61,9 +66,9 @@
 
 #else
 
-#define ASSERT_COLOR_DEF		""
+#define ASSERT_COLOR_DEF					""
 
-#define ASSERT_COLOR_UNDEF	""
+#define ASSERT_COLOR_UNDEF				""
 
 #endif
 

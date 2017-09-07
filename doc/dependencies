@@ -1,3 +1,23 @@
+gcc built-ins {
+	__attribute((constructor))
+	__attribute((destructor))
+	__attribute((noreturn))
+	__builtin_expect()
+	__builtin_prefetch()
+	__cplusplus
+	__cyg_profile_func_enter()
+	__cyg_profile_func_exit()
+	__FILE__
+	__FUNCTION__
+	__GNUC__
+	__LINE__
+	__ppc64__
+	__PRETTY_FUNCTION__
+	__x86_64__
+	extern "C" {}
+}
+
+
 #include <arpa/inet.h> {
 	htons()
 	inet_addr()

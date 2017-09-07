@@ -25,6 +25,8 @@ generic {
 	research converting types to immutables (more expensive, easier to use)
 
 	check UNIX, Cygwin, MinGW, Android Linux portability
+	
+	implement syscall wrappers (replays, decoupling, etc)
 }
 
 
@@ -40,6 +42,13 @@ list {
 
 plugin {
 	transform to interceptor, either by renaming or subclassing
+}
+
+
+properties {
+	implement object configuration
+
+	implement serialization with config
 }
 
 

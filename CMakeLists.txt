@@ -61,7 +61,7 @@ OPTION(WITH_STREAM "support buffered output streams" ON)
 
 IF(WITH_DEBUG)
 
-	OPTION(WITH_SYMBOL_ENUMERATION "enumerate loaded symbol tables" OFF)
+	OPTION(WITH_SYMBOL_ENUMERATION "enumerate loaded symbol tables" ON)
 
 	SET(WITH_DEBUG_LEVEL DBGL_HIGH)
 
@@ -182,11 +182,11 @@ ENDIF(WITH_STREAM)
 # Header file listings
 
 SET(HEADERS
-	${HDR_ROOT}/call.hpp													# ok
+	${HDR_ROOT}/call.hpp
 
-	${HDR_ROOT}/chain.hpp													# ok
+	${HDR_ROOT}/chain.hpp
 
-	${HDR_ROOT}/config.hpp												# ok
+	${HDR_ROOT}/config.hpp
 
 	${HDR_ROOT}/config/config_definitions.hpp
 
@@ -198,38 +198,38 @@ SET(HEADERS
 
 	${HDR_ROOT}/config/config_types.hpp
 
-	${HDR_ROOT}/exception.hpp											# ok
+	${HDR_ROOT}/exception.hpp
 
-	${HDR_ROOT}/list.hpp													# ok
+	${HDR_ROOT}/list.hpp
 
-	${HDR_ROOT}/node.hpp													# ok
+	${HDR_ROOT}/node.hpp
 
-	${HDR_ROOT}/object.hpp												# ok
+	${HDR_ROOT}/object.hpp
 
-	${HDR_ROOT}/process.hpp												# ok
+	${HDR_ROOT}/process.hpp
 
 	${HDR_ROOT}/properties.hpp
 
 	${HDR_ROOT}/property.hpp
 
-	${HDR_ROOT}/stack.hpp													# ok
+	${HDR_ROOT}/stack.hpp
 
-	${HDR_ROOT}/string.hpp												# ok
+	${HDR_ROOT}/string.hpp
 
-	${HDR_ROOT}/symbol.hpp												# ok
+	${HDR_ROOT}/symbol.hpp
 
-	${HDR_ROOT}/symtab.hpp												# ok
+	${HDR_ROOT}/symtab.hpp
 
-	${HDR_ROOT}/thread.hpp												# ok
+	${HDR_ROOT}/thread.hpp
 
 	${HDR_ROOT}/tracer.hpp
 
-	${HDR_ROOT}/util.hpp													# ok
+	${HDR_ROOT}/util.hpp
 )
 
 IF(WITH_FILTER)
 
-	SET(HEADERS ${HEADERS} ${HDR_ROOT}/filter.hpp)								# ok
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/filter.hpp)
 
 ENDIF(WITH_FILTER)
 
@@ -238,40 +238,40 @@ IF(WITH_HIGHLIGHT)
 	SET(HEADERS
 			${HEADERS}
 
-			${HDR_ROOT}/dictionary.hpp																# ok
+			${HDR_ROOT}/dictionary.hpp
 
-			${HDR_ROOT}/parser.hpp																		# ok
+			${HDR_ROOT}/parser.hpp
 
-			${HDR_ROOT}/style.hpp																			# ok
+			${HDR_ROOT}/style.hpp
 	)
 
 ENDIF(WITH_HIGHLIGHT)
 
 IF(WITH_PLUGIN)
 
-	SET(HEADERS ${HEADERS} ${HDR_ROOT}/plugin.hpp)								# ok
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/plugin.hpp)
 
 ENDIF(WITH_PLUGIN)
 
 IF(WITH_STREAM)
 
-	SET(HEADERS ${HEADERS} ${HDR_ROOT}/stream.hpp)								# ok
+	SET(HEADERS ${HEADERS} ${HDR_ROOT}/stream.hpp)
 
 	IF(WITH_STREAM_FILE)
 
-		SET(HEADERS ${HEADERS} ${HDR_ROOT}/file.hpp)								# ok
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/file.hpp)
 
 	ENDIF(WITH_STREAM_FILE)
 
 	IF(WITH_STREAM_STTY)
 
-		SET(HEADERS ${HEADERS} ${HDR_ROOT}/stty.hpp)								# ok
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/stty.hpp)
 
 	ENDIF(WITH_STREAM_STTY)
 
 	IF(WITH_STREAM_TCP)
 
-		SET(HEADERS ${HEADERS} ${HDR_ROOT}/tcp_socket.hpp)					# ok
+		SET(HEADERS ${HEADERS} ${HDR_ROOT}/tcp_socket.hpp)
 
 	ENDIF(WITH_STREAM_TCP)
 
